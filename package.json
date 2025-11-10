@@ -1,0 +1,8 @@
+{
+  "name": "branchmaid",
+  "version": "0.0.0",
+  "description": "Tidy up stale git branches safely",
+  "license": "MIT",
+  "author": "Aditya Verma",
+  "type": "module"
+}
