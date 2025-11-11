@@ -4,5 +4,9 @@
   "description": "Tidy up stale git branches safely",
   "license": "MIT",
   "author": "Aditya Verma",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
 }
