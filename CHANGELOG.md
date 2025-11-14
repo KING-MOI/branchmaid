@@ -103,3 +103,4 @@ All notable changes to this project are documented here. The format follows
 - flaky test observed while testing
 - follow up on the macOS build
 - double-check docs example behavior
+- cache miss observed while testing
