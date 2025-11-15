@@ -14,5 +14,8 @@
   },
   "bin": {
     "branchmaid": "dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
