@@ -1,8 +1,11 @@
 const DAY = 24 * 60 * 60 * 1000;
 
 const UNITS: Record<string, number> = {
+  h: DAY / 24,
   d: DAY,
   w: 7 * DAY,
+  mo: 30 * DAY,
+  y: 365 * DAY,
 };
 
 export function parseDuration(input: string): number {
