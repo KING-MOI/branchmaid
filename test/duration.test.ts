@@ -17,3 +17,15 @@ describe("parseDuration", () => {
     expect(() => parseDuration("10x")).toThrow(/invalid duration/);
   });
 });
+
+describe("parseDuration units", () => {
+  it("parses hours, months and years", () => {
+    expect(parseDuration("12h")).toBe(DAY / 2);
+    expect(parseDuration("3mo")).toBe(90 * DAY);
+    expect(parseDuration("1y")).toBe(365 * DAY);
+  });
+
+  it("is case and whitespace tolerant", () => {
+    expect(parseDuration(" 4W ")).toBe(28 * DAY);
+  });
+});
