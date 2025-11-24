@@ -15,3 +15,12 @@ export function parseDuration(input: string): number {
   }
   return Number(m[1]) * UNITS[m[2]];
 }
+
+export function formatAge(ms: number): string {
+  const days = Math.floor(ms / DAY);
+  if (days < 1) return "today";
+  if (days < 14) return `${days}d`;
+  if (days < 60) return `${Math.floor(days / 7)}w`;
+  if (days < 365) return `${Math.floor(days / 30)}mo`;
+  return `${Math.floor(days / 365)}y`;
+}
