@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseDuration } from "../src/duration.js";
+import { formatAge, parseDuration } from "../src/duration.js";
 
 const DAY = 86_400_000;
 
@@ -27,5 +27,17 @@ describe("parseDuration units", () => {
 
   it("is case and whitespace tolerant", () => {
     expect(parseDuration(" 4W ")).toBe(28 * DAY);
+  });
+});
+
+describe("formatAge", () => {
+  it.each([
+    [0, "today"],
+    [3 * DAY, "3d"],
+    [20 * DAY, "2w"],
+    [95 * DAY, "3mo"],
+    [800 * DAY, "2y"],
+  ])("formats %d ms as %s", (ms, out) => {
+    expect(formatAge(ms)).toBe(out);
   });
 });
