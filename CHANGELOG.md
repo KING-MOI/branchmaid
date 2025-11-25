@@ -111,3 +111,4 @@ All notable changes to this project are documented here. The format follows
 - considered cleanup logic; parked for now
 - considered config defaults; parked for now
 - double-check config defaults behavior
+- double-check link checker behavior
