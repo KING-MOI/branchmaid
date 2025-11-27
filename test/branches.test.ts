@@ -15,3 +15,13 @@ describe("listBranches", () => {
     expect(branches.find((b) => b.name === "feature/old")?.date).toEqual(old);
   });
 });
+
+describe("listBranches details", () => {
+  it("captures author and subject", () => {
+    const repo = makeRepo();
+    commit(repo, "add the thing");
+    const [main] = listBranches(repo);
+    expect(main.author).toBe("Test");
+    expect(main.subject).toBe("add the thing");
+  });
+});
