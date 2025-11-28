@@ -25,3 +25,14 @@ describe("listBranches details", () => {
     expect(main.subject).toBe("add the thing");
   });
 });
+
+describe("listBranches current", () => {
+  it("flags the checked out branch", () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "other"]);
+    const branches = listBranches(repo);
+    expect(branches.find((b) => b.current)?.name).toBe("main");
+    expect(branches.find((b) => b.name === "other")?.current).toBe(false);
+    expect(branches[0].email).toBe("test@example.com");
+  });
+});
