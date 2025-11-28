@@ -29,3 +29,11 @@ export function makeRepo(): string {
   commit(dir, "init");
   return dir;
 }
+
+export function addRemote(repo: string): string {
+  const remote = mkdtempSync(join(tmpdir(), "branchmaid-remote-"));
+  sh(remote, ["init", "-q", "--bare"]);
+  sh(repo, ["remote", "add", "origin", remote]);
+  sh(repo, ["push", "-q", "-u", "origin", "main"]);
+  return remote;
+}
