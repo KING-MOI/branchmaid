@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { listBranches } from "../src/branches.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 describe("listBranches", () => {
   it("lists local branches with commit dates", () => {
@@ -34,5 +34,23 @@ describe("listBranches current", () => {
     expect(branches.find((b) => b.current)?.name).toBe("main");
     expect(branches.find((b) => b.name === "other")?.current).toBe(false);
     expect(branches[0].email).toBe("test@example.com");
+  });
+});
+
+describe("listBranches upstream", () => {
+  it("marks branches whose remote was deleted as gone", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["checkout", "-q", "-b", "shipped"]);
+    commit(repo, "ship it");
+    sh(repo, ["push", "-q", "-u", "origin", "shipped"]);
+    sh(repo, ["checkout", "-q", "main"]);
+    sh(repo, ["push", "-q", "origin", "--delete", "shipped"]);
+    sh(repo, ["fetch", "-q", "--prune"]);
+
+    const shipped = listBranches(repo).find((b) => b.name === "shipped");
+    expect(shipped?.upstream).toBe("origin/shipped");
+    expect(shipped?.gone).toBe(true);
+    expect(listBranches(repo).find((b) => b.name === "main")?.gone).toBe(false);
   });
 });
