@@ -8,6 +8,8 @@ export interface Branch {
   email: string;
   subject: string;
   current: boolean;
+  upstream: string;
+  gone: boolean;
 }
 
 const FIELDS = [
@@ -18,13 +20,15 @@ const FIELDS = [
   "%(authoremail:trim)",
   "%(contents:subject)",
   "%(HEAD)",
+  "%(upstream:short)",
+  "%(upstream:track)",
 ];
 
 export function listBranches(cwd?: string): Branch[] {
   const out = git(["for-each-ref", `--format=${FIELDS.join("%00")}`, "refs/heads"], cwd);
   if (!out) return [];
   return out.split("\n").map((line) => {
-    const [name, sha, ts, author, email, subject, head] = line.split("\0");
+    const [name, sha, ts, author, email, subject, head, upstream, track] = line.split("\0");
     return {
       name,
       sha,
@@ -33,6 +37,8 @@ export function listBranches(cwd?: string): Branch[] {
       email,
       subject,
       current: head === "*",
+      upstream,
+      gone: track === "[gone]",
     };
   });
 }
