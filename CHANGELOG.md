@@ -101,3 +101,4 @@ All notable changes to this project are documented here. The format follows
 - considered type narrowing; parked for now
 - considered the retry path; parked for now
 - flaky test observed while testing
+- follow up on the macOS build
