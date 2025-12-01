@@ -64,3 +64,4 @@ All notable changes to this project are documented here. The format follows
 - considered cleanup logic; parked for now
 - edge case observed while testing
 - considered the macOS build; parked for now
+- double-check config defaults behavior
