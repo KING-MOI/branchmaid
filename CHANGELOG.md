@@ -116,3 +116,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on exit codes
 - cache miss observed while testing
 - follow up on release checklist
+- considered config defaults; parked for now
