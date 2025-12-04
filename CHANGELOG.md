@@ -130,3 +130,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on cleanup logic
 - slow start observed while testing
 - slow start observed while testing
+- double-check release checklist behavior
