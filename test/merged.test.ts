@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { defaultBase, mergedInto } from "../src/merged.js";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { defaultBase, isSquashMerged, mergedInto } from "../src/merged.js";
 import { commit, makeRepo, sh } from "./helpers.js";
 
 describe("mergedInto", () => {
@@ -34,5 +36,34 @@ describe("defaultBase", () => {
     const repo = makeRepo();
     sh(repo, ["branch", "-m", "main", "trunk"]);
     expect(() => defaultBase(repo)).toThrow(/base branch/);
+  });
+});
+
+describe("isSquashMerged", () => {
+  it("recognises a branch squashed into base", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "squashy"]);
+    writeFileSync(join(repo, "a.txt"), "a\n");
+    sh(repo, ["add", "a.txt"]);
+    commit(repo, "add a");
+    writeFileSync(join(repo, "b.txt"), "b\n");
+    sh(repo, ["add", "b.txt"]);
+    commit(repo, "add b");
+    sh(repo, ["checkout", "-q", "main"]);
+    sh(repo, ["merge", "-q", "--squash", "squashy"]);
+    commit(repo, "squashed");
+
+    expect(mergedInto("main", repo).has("squashy")).toBe(false);
+    expect(isSquashMerged("squashy", "main", repo)).toBe(true);
+  });
+
+  it("does not flag unmerged work", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "open"]);
+    writeFileSync(join(repo, "c.txt"), "c\n");
+    sh(repo, ["add", "c.txt"]);
+    commit(repo, "add c");
+    sh(repo, ["checkout", "-q", "main"]);
+    expect(isSquashMerged("open", "main", repo)).toBe(false);
   });
 });
