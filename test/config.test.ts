@@ -24,3 +24,21 @@ describe("loadConfig", () => {
     expect(cfg.protected).toEqual(DEFAULTS.protected);
   });
 });
+
+describe("loadConfig package.json", () => {
+  it("reads the branchmaid key", () => {
+    const cfg = loadConfig(dir({ "package.json": { name: "x", branchmaid: { protected: ["release/*"] } } }));
+    expect(cfg.protected).toEqual(["release/*"]);
+  });
+
+  it("ignores package.json without the key", () => {
+    expect(loadConfig(dir({ "package.json": { name: "x" } }))).toEqual(DEFAULTS);
+  });
+
+  it("prefers .branchmaidrc over package.json", () => {
+    const cfg = loadConfig(
+      dir({ ".branchmaidrc": { base: "a" }, "package.json": { branchmaid: { base: "b" } } }),
+    );
+    expect(cfg.base).toBe("a");
+  });
+});
