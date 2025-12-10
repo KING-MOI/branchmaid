@@ -42,3 +42,9 @@ describe("loadConfig package.json", () => {
     expect(cfg.base).toBe("a");
   });
 });
+
+describe("loadConfig rc variants", () => {
+  it("reads .branchmaidrc.json", () => {
+    expect(loadConfig(dir({ ".branchmaidrc.json": { base: "dev" } })).base).toBe("dev");
+  });
+});
