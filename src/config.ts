@@ -18,13 +18,17 @@ export const DEFAULTS: Config = {
   sweep: { olderThan: "30d", merged: true, gone: true },
 };
 
+const RC_FILES = [".branchmaidrc", ".branchmaidrc.json"];
+
 function readJson(file: string): any {
   return JSON.parse(readFileSync(file, "utf8"));
 }
 
 function findRaw(dir: string): Partial<Config> | undefined {
-  const rc = join(dir, ".branchmaidrc");
-  if (existsSync(rc)) return readJson(rc);
+  for (const name of RC_FILES) {
+    const rc = join(dir, name);
+    if (existsSync(rc)) return readJson(rc);
+  }
   const pkg = join(dir, "package.json");
   if (existsSync(pkg)) return readJson(pkg).branchmaid;
   return undefined;
