@@ -21,7 +21,11 @@ export const DEFAULTS: Config = {
 const RC_FILES = [".branchmaidrc", ".branchmaidrc.json"];
 
 function readJson(file: string): any {
-  return JSON.parse(readFileSync(file, "utf8"));
+  try {
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch (err) {
+    throw new Error(`could not parse ${file}: ${(err as Error).message}`);
+  }
 }
 
 function findRaw(dir: string): Partial<Config> | undefined {
