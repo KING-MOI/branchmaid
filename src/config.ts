@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { parseDuration } from "./duration.js";
 
 export interface SweepConfig {
   olderThan: string;
@@ -28,18 +29,49 @@ function readJson(file: string): any {
   }
 }
 
-function findRaw(dir: string): Partial<Config> | undefined {
+function findRaw(dir: string): { raw: any; source: string } | undefined {
   for (const name of RC_FILES) {
     const rc = join(dir, name);
-    if (existsSync(rc)) return readJson(rc);
+    if (existsSync(rc)) return { raw: readJson(rc), source: rc };
   }
   const pkg = join(dir, "package.json");
-  if (existsSync(pkg)) return readJson(pkg).branchmaid;
+  if (existsSync(pkg)) {
+    const raw = readJson(pkg).branchmaid;
+    if (raw !== undefined) return { raw, source: `${pkg}#branchmaid` };
+  }
   return undefined;
 }
 
+export function validateConfig(raw: any, source: string): Partial<Config> {
+  const fail = (msg: string): never => {
+    throw new Error(`${source}: ${msg}`);
+  };
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) fail("config must be an object");
+  if (raw.base !== undefined && typeof raw.base !== "string") fail("base must be a string");
+  if (
+    raw.protected !== undefined &&
+    !(Array.isArray(raw.protected) && raw.protected.every((p: unknown) => typeof p === "string"))
+  ) {
+    fail("protected must be an array of strings");
+  }
+  const sweep = raw.sweep ?? {};
+  if (typeof sweep !== "object") fail("sweep must be an object");
+  for (const key of ["merged", "gone"]) {
+    if (sweep[key] !== undefined && typeof sweep[key] !== "boolean") fail(`sweep.${key} must be a boolean`);
+  }
+  if (sweep.olderThan !== undefined) {
+    try {
+      parseDuration(String(sweep.olderThan));
+    } catch {
+      fail(`sweep.olderThan is not a valid duration: ${sweep.olderThan}`);
+    }
+  }
+  return raw;
+}
+
 export function loadConfig(dir = process.cwd()): Config {
-  const raw = findRaw(dir);
-  if (!raw) return DEFAULTS;
+  const found = findRaw(dir);
+  if (!found) return DEFAULTS;
+  const raw = validateConfig(found.raw, found.source);
   return { ...DEFAULTS, ...raw, sweep: { ...DEFAULTS.sweep, ...raw.sweep } };
 }
