@@ -128,3 +128,4 @@ All notable changes to this project are documented here. The format follows
 - considered docs example; parked for now
 - edge case observed while testing
 - follow up on cleanup logic
+- slow start observed while testing
