@@ -48,3 +48,9 @@ describe("loadConfig rc variants", () => {
     expect(loadConfig(dir({ ".branchmaidrc.json": { base: "dev" } })).base).toBe("dev");
   });
 });
+
+describe("loadConfig errors", () => {
+  it("reports which file failed to parse", () => {
+    expect(() => loadConfig(dir({ ".branchmaidrc": "{ nope" }))).toThrow(/\.branchmaidrc/);
+  });
+});
