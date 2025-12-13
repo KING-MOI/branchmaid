@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEFAULTS, loadConfig } from "../src/config.js";
+import { DEFAULTS, loadConfig, validateConfig } from "../src/config.js";
 
 function dir(files: Record<string, unknown>): string {
   const d = mkdtempSync(join(tmpdir(), "branchmaid-cfg-"));
@@ -52,5 +52,22 @@ describe("loadConfig rc variants", () => {
 describe("loadConfig errors", () => {
   it("reports which file failed to parse", () => {
     expect(() => loadConfig(dir({ ".branchmaidrc": "{ nope" }))).toThrow(/\.branchmaidrc/);
+  });
+});
+
+describe("validateConfig", () => {
+  it.each([
+    [[], /must be an object/],
+    [{ base: 1 }, /base must be a string/],
+    [{ protected: "main" }, /protected must be an array/],
+    [{ protected: [1] }, /protected must be an array/],
+    [{ sweep: { merged: "yes" } }, /sweep.merged must be a boolean/],
+    [{ sweep: { olderThan: "forever" } }, /not a valid duration/],
+  ])("rejects %j", (raw, msg) => {
+    expect(() => validateConfig(raw, "rc")).toThrow(msg);
+  });
+
+  it("prefixes errors with the source", () => {
+    expect(() => loadConfig(dir({ ".branchmaidrc": { base: 3 } }))).toThrow(/\.branchmaidrc: base/);
   });
 });
