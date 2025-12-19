@@ -56,3 +56,4 @@ All notable changes to this project are documented here. The format follows
 - double-check the macOS build behavior
 - follow up on exit codes
 - follow up on config defaults
+- considered cleanup logic; parked for now
