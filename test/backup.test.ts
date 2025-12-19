@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { backupTagName, createBackup } from "../src/backup.js";
+import { backupTagName, createBackup, listBackups, parseBackupTag } from "../src/backup.js";
 import { makeRepo, sh } from "./helpers.js";
 
 const at = new Date("2026-02-03T04:05:06.789Z");
@@ -16,5 +16,31 @@ describe("createBackup", () => {
     const sha = sh(repo, ["rev-parse", "HEAD"]);
     const tag = createBackup("main", sha, repo, at);
     expect(sh(repo, ["rev-parse", `${tag}^{commit}`])).toBe(sha);
+  });
+});
+
+describe("parseBackupTag", () => {
+  it("round-trips names with slashes", () => {
+    expect(parseBackupTag(backupTagName("a/b/c", at))).toEqual({
+      branch: "a/b/c",
+      date: new Date("2026-02-03T04:05:06Z"),
+    });
+  });
+
+  it("rejects foreign tags", () => {
+    expect(parseBackupTag("v1.0.0")).toBeUndefined();
+    expect(parseBackupTag("branchmaid/backup/notastamp/x")).toBeUndefined();
+    expect(parseBackupTag("branchmaid/backup/20260203T040506Z")).toBeUndefined();
+  });
+});
+
+describe("listBackups", () => {
+  it("returns newest first", () => {
+    const repo = makeRepo();
+    const sha = sh(repo, ["rev-parse", "HEAD"]);
+    createBackup("old", sha, repo, new Date("2026-01-01T00:00:00Z"));
+    createBackup("new", sha, repo, new Date("2026-02-01T00:00:00Z"));
+    sh(repo, ["tag", "v1.0.0"]);
+    expect(listBackups(repo).map((b) => b.branch)).toEqual(["new", "old"]);
   });
 });
