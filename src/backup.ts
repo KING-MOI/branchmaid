@@ -53,3 +53,11 @@ export function listBackups(cwd?: string): Backup[] {
   }
   return backups.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
+
+export function restoreBackup(backup: Backup, cwd?: string): void {
+  git(["branch", backup.branch, backup.sha], cwd);
+}
+
+export function dropBackup(backup: Backup, cwd?: string): void {
+  git(["tag", "-d", backup.tag], cwd);
+}
