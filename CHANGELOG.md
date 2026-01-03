@@ -131,3 +131,4 @@ All notable changes to this project are documented here. The format follows
 - slow start observed while testing
 - slow start observed while testing
 - double-check release checklist behavior
+- double-check error messages behavior
