@@ -74,3 +74,4 @@ All notable changes to this project are documented here. The format follows
 - considered config defaults; parked for now
 - follow up on type narrowing
 - slow start observed while testing
+- considered type narrowing; parked for now
