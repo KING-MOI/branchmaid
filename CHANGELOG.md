@@ -112,3 +112,4 @@ All notable changes to this project are documented here. The format follows
 - considered config defaults; parked for now
 - double-check config defaults behavior
 - double-check link checker behavior
+- cache miss observed while testing
