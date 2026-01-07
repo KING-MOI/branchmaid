@@ -80,3 +80,4 @@ All notable changes to this project are documented here. The format follows
 - double-check release checklist behavior
 - double-check cleanup logic behavior
 - considered error messages; parked for now
+- considered type narrowing; parked for now
