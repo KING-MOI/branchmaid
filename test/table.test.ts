@@ -1,6 +1,8 @@
-import pc from "picocolors";
+import { createColors } from "picocolors";
 import { describe, expect, it } from "vitest";
 import { table } from "../src/table.js";
+
+const pc = createColors(true);
 
 describe("table", () => {
   it("pads columns to the widest cell", () => {
