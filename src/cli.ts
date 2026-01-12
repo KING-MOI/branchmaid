@@ -1,2 +1,4 @@
 #!/usr/bin/env node
-console.log("branchmaid");
+import { main } from "./main.js";
+
+process.exitCode = main(process.argv.slice(2));
