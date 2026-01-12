@@ -21,7 +21,7 @@ export function renderEntries(entries: Entry[]): string {
       e.branch.current ? pc.cyan(`* ${e.branch.name}`) : `  ${e.branch.name}`,
       pc.dim(formatAge(e.age)),
       e.branch.author,
-      renderReasons(e.reasons),
+      e.protected ? pc.dim("protected") : renderReasons(e.reasons),
       pc.dim(e.branch.subject),
     ]),
   );
