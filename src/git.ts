@@ -22,3 +22,7 @@ export function git(args: string[], cwd = process.cwd()): string {
     throw new GitError(String(e.stderr ?? "").trim() || e.message, args);
   }
 }
+
+export function repoRoot(cwd?: string): string {
+  return git(["rev-parse", "--show-toplevel"], cwd);
+}
