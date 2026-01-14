@@ -1,3 +1,4 @@
+import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { main } from "../src/main.js";
 import { commit, makeRepo, sh } from "./helpers.js";
@@ -27,5 +28,19 @@ describe("main list", () => {
     const { code, err } = run(["wat"], makeRepo());
     expect(code).toBe(1);
     expect(err).toContain("unknown command: wat");
+  });
+});
+
+describe("main errors", () => {
+  it("reports unknown options", () => {
+    const { code, err } = run(["--nope"], makeRepo());
+    expect(code).toBe(1);
+    expect(err).toMatch(/error.*--nope/);
+  });
+
+  it("reports when not in a git repo", () => {
+    const { code, err } = run([], tmpdir());
+    expect(code).toBe(1);
+    expect(err).toMatch(/not a git repository/);
   });
 });
