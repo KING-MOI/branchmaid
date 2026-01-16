@@ -1,11 +1,13 @@
 import { parseArgs } from "node:util";
 import pc from "picocolors";
+import { list } from "./commands/list.js";
 import { loadConfig } from "./config.js";
-import { repoRoot } from "./git.js";
+import type { Context } from "./context.js";
 import { parseDuration } from "./duration.js";
+import { repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
-import { renderEntries } from "./render.js";
-import { scan } from "./scan.js";
+
+const COMMANDS: Record<string, (ctx: Context) => number> = { list };
 
 function run(argv: string[], cwd: string): number {
   const { values, positionals } = parseArgs({
@@ -16,19 +18,19 @@ function run(argv: string[], cwd: string): number {
       "older-than": { type: "string" },
     },
   });
-  const command = positionals[0] ?? "list";
-  const config = loadConfig(repoRoot(cwd));
-  const base = values.base ?? config.base ?? defaultBase(cwd);
-  const staleAfter = parseDuration(values["older-than"] ?? config.sweep.olderThan);
-
-  if (command === "list") {
-    const entries = scan({ base, staleAfter, protected: config.protected }, cwd);
-    console.log(renderEntries(entries));
-    return 0;
+  const name = positionals[0] ?? "list";
+  const command = COMMANDS[name];
+  if (!command) {
+    console.error(`unknown command: ${name}`);
+    return 1;
   }
-
-  console.error(`unknown command: ${command}`);
-  return 1;
+  const config = loadConfig(repoRoot(cwd));
+  return command({
+    cwd,
+    config,
+    base: values.base ?? config.base ?? defaultBase(cwd),
+    staleAfter: parseDuration(values["older-than"] ?? config.sweep.olderThan),
+  });
 }
 
 export function main(argv: string[], cwd = process.cwd()): number {
