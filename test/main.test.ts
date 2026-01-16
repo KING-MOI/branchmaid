@@ -1,4 +1,6 @@
+import { mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { main } from "../src/main.js";
 import { commit, makeRepo, sh } from "./helpers.js";
@@ -42,5 +44,16 @@ describe("main errors", () => {
     const { code, err } = run([], tmpdir());
     expect(code).toBe(1);
     expect(err).toMatch(/not a git repository/);
+  });
+});
+
+describe("main config", () => {
+  it("reads .branchmaidrc from the repo root when run in a subdirectory", () => {
+    const repo = makeRepo();
+    writeFileSync(join(repo, ".branchmaidrc"), JSON.stringify({ protected: ["keep/*"] }));
+    mkdirSync(join(repo, "sub"));
+    sh(repo, ["branch", "keep/me"]);
+    const { out } = run([], join(repo, "sub"));
+    expect(out).toMatch(/keep\/me.*protected/);
   });
 });
