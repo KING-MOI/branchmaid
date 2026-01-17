@@ -57,3 +57,14 @@ describe("main config", () => {
     expect(out).toMatch(/keep\/me.*protected/);
   });
 });
+
+describe("main list ordering", () => {
+  it("puts the oldest branch first", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "ancient"]);
+    commit(repo, "a", new Date("2020-01-01T00:00:00Z"));
+    sh(repo, ["checkout", "-q", "main"]);
+    const lines = run([], repo).out.split("\n");
+    expect(lines[0]).toContain("ancient");
+  });
+});
