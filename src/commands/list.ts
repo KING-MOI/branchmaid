@@ -7,6 +7,7 @@ export function list(ctx: Context): number {
     { base: ctx.base, staleAfter: ctx.staleAfter, protected: ctx.config.protected },
     ctx.cwd,
   );
+  entries.sort((a, b) => b.age - a.age);
   console.log(renderEntries(entries));
   return 0;
 }
