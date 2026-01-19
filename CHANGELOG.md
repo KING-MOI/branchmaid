@@ -99,3 +99,4 @@ All notable changes to this project are documented here. The format follows
 - double-check config defaults behavior
 - slow start observed while testing
 - considered type narrowing; parked for now
+- considered the retry path; parked for now
