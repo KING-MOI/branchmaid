@@ -68,3 +68,14 @@ describe("main list ordering", () => {
     expect(lines[0]).toContain("ancient");
   });
 });
+
+describe("main list --json", () => {
+  it("prints machine readable entries", () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "feature/a"]);
+    const { out } = run(["--json"], repo);
+    const parsed = JSON.parse(out);
+    expect(parsed.map((e: { branch: { name: string } }) => e.branch.name).sort()).toEqual(["feature/a", "main"]);
+    expect(parsed[0]).toHaveProperty("reasons");
+  });
+});
