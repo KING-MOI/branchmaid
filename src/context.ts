@@ -5,4 +5,7 @@ export interface Context {
   config: Config;
   base: string;
   staleAfter: number;
+  flags: {
+    json?: boolean;
+  };
 }

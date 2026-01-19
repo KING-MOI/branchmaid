@@ -9,15 +9,14 @@ import { defaultBase } from "./merged.js";
 
 const COMMANDS: Record<string, (ctx: Context) => number> = { list };
 
+const OPTIONS = {
+  base: { type: "string" },
+  "older-than": { type: "string" },
+  json: { type: "boolean" },
+} as const;
+
 function run(argv: string[], cwd: string): number {
-  const { values, positionals } = parseArgs({
-    args: argv,
-    allowPositionals: true,
-    options: {
-      base: { type: "string" },
-      "older-than": { type: "string" },
-    },
-  });
+  const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: OPTIONS });
   const name = positionals[0] ?? "list";
   const command = COMMANDS[name];
   if (!command) {
@@ -27,6 +26,7 @@ function run(argv: string[], cwd: string): number {
   const config = loadConfig(repoRoot(cwd));
   return command({
     cwd,
+    flags: values,
     config,
     base: values.base ?? config.base ?? defaultBase(cwd),
     staleAfter: parseDuration(values["older-than"] ?? config.sweep.olderThan),

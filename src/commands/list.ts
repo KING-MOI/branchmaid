@@ -8,6 +8,10 @@ export function list(ctx: Context): number {
     ctx.cwd,
   );
   entries.sort((a, b) => b.age - a.age);
+  if (ctx.flags.json) {
+    console.log(JSON.stringify(entries, null, 2));
+    return 0;
+  }
   console.log(renderEntries(entries));
   return 0;
 }
