@@ -13,6 +13,9 @@ const OPTIONS = {
   base: { type: "string" },
   "older-than": { type: "string" },
   json: { type: "boolean" },
+  merged: { type: "boolean" },
+  gone: { type: "boolean" },
+  stale: { type: "boolean" },
 } as const;
 
 function run(argv: string[], cwd: string): number {

@@ -7,5 +7,8 @@ export interface Context {
   staleAfter: number;
   flags: {
     json?: boolean;
+    merged?: boolean;
+    gone?: boolean;
+    stale?: boolean;
   };
 }
