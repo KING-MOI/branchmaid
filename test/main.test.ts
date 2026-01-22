@@ -79,3 +79,36 @@ describe("main list --json", () => {
     expect(parsed[0]).toHaveProperty("reasons");
   });
 });
+
+describe("main list filters", () => {
+  function repoWithKinds(): string {
+    const repo = makeRepo();
+    sh(repo, ["branch", "merged-one"]);
+    sh(repo, ["checkout", "-q", "-b", "old-one"]);
+    commit(repo, "old", new Date("2020-01-01T00:00:00Z"));
+    sh(repo, ["checkout", "-q", "-b", "fresh-one", "main"]);
+    commit(repo, "fresh");
+    sh(repo, ["checkout", "-q", "main"]);
+    return repo;
+  }
+
+  it("--merged shows only merged, unprotected branches", () => {
+    const { out } = run(["--merged"], repoWithKinds());
+    expect(out).toContain("merged-one");
+    expect(out).not.toContain("old-one");
+    expect(out).not.toContain("main");
+  });
+
+  it("--stale shows only old branches", () => {
+    const { out } = run(["--stale"], repoWithKinds());
+    expect(out).toContain("old-one");
+    expect(out).not.toContain("fresh-one");
+  });
+
+  it("filters combine as a union", () => {
+    const { out } = run(["--stale", "--merged"], repoWithKinds());
+    expect(out).toContain("old-one");
+    expect(out).toContain("merged-one");
+    expect(out).not.toContain("fresh-one");
+  });
+});
