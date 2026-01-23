@@ -10,5 +10,6 @@ export interface Context {
     merged?: boolean;
     gone?: boolean;
     stale?: boolean;
+    squash?: boolean;
   };
 }

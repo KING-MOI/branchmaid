@@ -16,6 +16,7 @@ const OPTIONS = {
   merged: { type: "boolean" },
   gone: { type: "boolean" },
   stale: { type: "boolean" },
+  squash: { type: "boolean" },
 } as const;
 
 function run(argv: string[], cwd: string): number {
