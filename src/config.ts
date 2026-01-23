@@ -11,11 +11,13 @@ export interface SweepConfig {
 export interface Config {
   base?: string;
   protected: string[];
+  squash: boolean;
   sweep: SweepConfig;
 }
 
 export const DEFAULTS: Config = {
   protected: ["main", "master", "develop"],
+  squash: false,
   sweep: { olderThan: "30d", merged: true, gone: true },
 };
 
@@ -54,6 +56,7 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
   ) {
     fail("protected must be an array of strings");
   }
+  if (raw.squash !== undefined && typeof raw.squash !== "boolean") fail("squash must be a boolean");
   const sweep = raw.sweep ?? {};
   if (typeof sweep !== "object") fail("sweep must be an object");
   for (const key of ["merged", "gone"]) {
