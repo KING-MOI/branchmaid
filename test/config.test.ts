@@ -71,3 +71,9 @@ describe("validateConfig", () => {
     expect(() => loadConfig(dir({ ".branchmaidrc": { base: 3 } }))).toThrow(/\.branchmaidrc: base/);
   });
 });
+
+describe("validateConfig squash", () => {
+  it("requires a boolean", () => {
+    expect(() => validateConfig({ squash: "yes" }, "rc")).toThrow(/squash must be a boolean/);
+  });
+});
