@@ -112,3 +112,19 @@ describe("main list filters", () => {
     expect(out).not.toContain("fresh-one");
   });
 });
+
+describe("main list --squash", () => {
+  it("treats squash-merged branches as merged", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "squashy"]);
+    writeFileSync(join(repo, "f.txt"), "f\n");
+    sh(repo, ["add", "f.txt"]);
+    commit(repo, "f");
+    sh(repo, ["checkout", "-q", "main"]);
+    sh(repo, ["merge", "-q", "--squash", "squashy"]);
+    commit(repo, "squash");
+
+    expect(run(["--merged"], repo).out).not.toContain("squashy");
+    expect(run(["--merged", "--squash"], repo).out).toContain("squashy");
+  });
+});
