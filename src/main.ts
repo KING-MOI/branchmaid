@@ -2,6 +2,7 @@ import { parseArgs } from "node:util";
 import pc from "picocolors";
 import { list } from "./commands/list.js";
 import { loadConfig } from "./config.js";
+import { HELP } from "./help.js";
 import type { Context } from "./context.js";
 import { parseDuration } from "./duration.js";
 import { repoRoot } from "./git.js";
@@ -17,11 +18,16 @@ const OPTIONS = {
   gone: { type: "boolean" },
   stale: { type: "boolean" },
   squash: { type: "boolean" },
+  help: { type: "boolean", short: "h" },
 } as const;
 
 function run(argv: string[], cwd: string): number {
   const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: OPTIONS });
   const name = positionals[0] ?? "list";
+  if (values.help || name === "help") {
+    console.log(HELP);
+    return 0;
+  }
   const command = COMMANDS[name];
   if (!command) {
     console.error(`unknown command: ${name}`);
