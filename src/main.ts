@@ -7,6 +7,7 @@ import type { Context } from "./context.js";
 import { parseDuration } from "./duration.js";
 import { repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
+import { version } from "./version.js";
 
 const COMMANDS: Record<string, (ctx: Context) => number> = { list };
 
@@ -19,11 +20,16 @@ const OPTIONS = {
   stale: { type: "boolean" },
   squash: { type: "boolean" },
   help: { type: "boolean", short: "h" },
+  version: { type: "boolean", short: "v" },
 } as const;
 
 function run(argv: string[], cwd: string): number {
   const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: OPTIONS });
   const name = positionals[0] ?? "list";
+  if (values.version) {
+    console.log(version());
+    return 0;
+  }
   if (values.help || name === "help") {
     console.log(HELP);
     return 0;
