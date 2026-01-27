@@ -128,3 +128,18 @@ describe("main list --squash", () => {
     expect(run(["--merged", "--squash"], repo).out).toContain("squashy");
   });
 });
+
+describe("main help and version", () => {
+  it("prints help with -h and help", () => {
+    for (const argv of [["-h"], ["--help"], ["help"]]) {
+      const { code, out } = run(argv, tmpdir());
+      expect(code).toBe(0);
+      expect(out).toContain("Usage");
+    }
+  });
+
+  it("prints the package version", () => {
+    const { out } = run(["-v"], tmpdir());
+    expect(out).toMatch(/^\d+\.\d+\.\d+/);
+  });
+});
