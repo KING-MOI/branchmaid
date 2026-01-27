@@ -6,6 +6,7 @@ export interface SweepConfig {
   olderThan: string;
   merged: boolean;
   gone: boolean;
+  stale: boolean;
 }
 
 export interface Config {
@@ -18,7 +19,7 @@ export interface Config {
 export const DEFAULTS: Config = {
   protected: ["main", "master", "develop"],
   squash: false,
-  sweep: { olderThan: "30d", merged: true, gone: true },
+  sweep: { olderThan: "30d", merged: true, gone: true, stale: false },
 };
 
 const RC_FILES = [".branchmaidrc", ".branchmaidrc.json"];
@@ -59,7 +60,7 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
   if (raw.squash !== undefined && typeof raw.squash !== "boolean") fail("squash must be a boolean");
   const sweep = raw.sweep ?? {};
   if (typeof sweep !== "object") fail("sweep must be an object");
-  for (const key of ["merged", "gone"]) {
+  for (const key of ["merged", "gone", "stale"]) {
     if (sweep[key] !== undefined && typeof sweep[key] !== "boolean") fail(`sweep.${key} must be a boolean`);
   }
   if (sweep.olderThan !== undefined) {
