@@ -12,6 +12,8 @@ export interface Context {
     gone?: boolean;
     stale?: boolean;
     squash?: boolean;
+    dryRun?: boolean;
+    yes?: boolean;
   };
 }
 

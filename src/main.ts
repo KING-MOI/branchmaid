@@ -1,6 +1,7 @@
 import { parseArgs } from "node:util";
 import pc from "picocolors";
 import { list } from "./commands/list.js";
+import { sweep } from "./commands/sweep.js";
 import { loadConfig } from "./config.js";
 import { HELP } from "./help.js";
 import type { Context } from "./context.js";
@@ -9,7 +10,7 @@ import { repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { version } from "./version.js";
 
-const COMMANDS: Record<string, (ctx: Context) => number> = { list };
+const COMMANDS: Record<string, (ctx: Context) => number> = { list, sweep };
 
 const OPTIONS = {
   base: { type: "string" },
@@ -19,6 +20,8 @@ const OPTIONS = {
   gone: { type: "boolean" },
   stale: { type: "boolean" },
   squash: { type: "boolean" },
+  "dry-run": { type: "boolean", short: "n" },
+  yes: { type: "boolean", short: "y" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
@@ -42,7 +45,7 @@ function run(argv: string[], cwd: string): number {
   const config = loadConfig(repoRoot(cwd));
   return command({
     cwd,
-    flags: values,
+    flags: { ...values, dryRun: values["dry-run"] },
     config,
     base: values.base ?? config.base ?? defaultBase(cwd),
     staleAfter: parseDuration(values["older-than"] ?? config.sweep.olderThan),
