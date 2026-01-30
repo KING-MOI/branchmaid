@@ -60,3 +60,4 @@ All notable changes to this project are documented here. The format follows
 - slow start observed while testing
 - follow up on the retry path
 - flaky test observed while testing
+- double-check exit codes behavior
