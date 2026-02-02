@@ -49,3 +49,4 @@ All notable changes to this project are documented here. The format follows
 - A branch whose tip moved after scanning is skipped.
 - Remote branches are only deleted if they still match the backed up commit.
 - Branches sitting exactly on the base tip are not swept.
+- follow up on type narrowing
