@@ -4,7 +4,6 @@ import { listBranches } from "../src/branches.js";
 import { run } from "./cli.js";
 import { commit, makeRepo, sh } from "./helpers.js";
 
-
 function repo(): string {
   const r = makeRepo();
   sh(r, ["branch", "merged-one"]);
@@ -17,33 +16,33 @@ function repo(): string {
 const names = (r: string) => listBranches(r).map((b) => b.name).sort();
 
 describe("sweep", () => {
-  it("dry run lists targets without deleting", () => {
+  it("dry run lists targets without deleting", async () => {
     const r = repo();
-    const { code, out } = run(["sweep", "--dry-run"], r);
+    const { code, out } = await run(["sweep", "--dry-run"], r);
     expect(code).toBe(0);
     expect(out).toContain("merged-one");
     expect(out).toContain("would be deleted");
     expect(names(r)).toEqual(["main", "merged-one", "wip"]);
   });
 
-  it("refuses without --yes", () => {
+  it("refuses without --yes", async () => {
     const r = repo();
-    const { code, err } = run(["sweep"], r);
+    const { code, err } = await run(["sweep"], r);
     expect(code).toBe(1);
     expect(err).toContain("--yes");
     expect(names(r)).toContain("merged-one");
   });
 
-  it("deletes merged branches and keeps backups", () => {
+  it("deletes merged branches and keeps backups", async () => {
     const r = repo();
-    const { code, out } = run(["sweep", "--yes"], r);
+    const { code, out } = await run(["sweep", "--yes"], r);
     expect(code).toBe(0);
     expect(out).toMatch(/deleted merged-one/);
     expect(names(r)).toEqual(["main", "wip"]);
     expect(listBackups(r).map((b) => b.branch)).toEqual(["merged-one"]);
   });
 
-  it("says so when there is nothing to do", () => {
-    expect(run(["sweep", "-y"], makeRepo()).out).toContain("nothing to sweep");
+  it("says so when there is nothing to do", async () => {
+    expect((await run(["sweep", "-y"], makeRepo())).out).toContain("nothing to sweep");
   });
 });

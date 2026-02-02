@@ -10,7 +10,7 @@ import { repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { version } from "./version.js";
 
-const COMMANDS: Record<string, (ctx: Context) => number> = { list, sweep };
+const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = { list, sweep };
 
 const OPTIONS = {
   base: { type: "string" },
@@ -26,7 +26,7 @@ const OPTIONS = {
   version: { type: "boolean", short: "v" },
 } as const;
 
-function run(argv: string[], cwd: string): number {
+async function run(argv: string[], cwd: string): Promise<number> {
   const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: OPTIONS });
   const name = positionals[0] ?? "list";
   if (values.version) {
@@ -52,9 +52,9 @@ function run(argv: string[], cwd: string): number {
   });
 }
 
-export function main(argv: string[], cwd = process.cwd()): number {
+export async function main(argv: string[], cwd = process.cwd()): Promise<number> {
   try {
-    return run(argv, cwd);
+    return await run(argv, cwd);
   } catch (err) {
     console.error(`${pc.red("error")} ${(err as Error).message}`);
     return 1;
