@@ -1,10 +1,11 @@
+import { confirm, isCancel } from "@clack/prompts";
 import pc from "picocolors";
 import { type Context, scanRepo } from "../context.js";
 import { deleteBranch } from "../delete.js";
 import { renderEntries } from "../render.js";
 import { selectSweep } from "../sweep.js";
 
-export function sweep(ctx: Context): number {
+export async function sweep(ctx: Context): Promise<number> {
   const targets = selectSweep(scanRepo(ctx), ctx.config.sweep);
   if (targets.length === 0) {
     console.log("nothing to sweep");
@@ -16,8 +17,15 @@ export function sweep(ctx: Context): number {
     return 0;
   }
   if (!ctx.flags.yes) {
-    console.error("refusing to delete without --yes (or use --dry-run)");
-    return 1;
+    if (!process.stdin.isTTY) {
+      console.error("refusing to delete without --yes (or use --dry-run)");
+      return 1;
+    }
+    const ok = await confirm({ message: `Delete ${targets.length} branch(es)? Backups are kept as tags.` });
+    if (isCancel(ok) || !ok) {
+      console.log("aborted");
+      return 0;
+    }
   }
   let failed = 0;
   for (const e of targets) {
