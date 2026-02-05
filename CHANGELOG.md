@@ -109,3 +109,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on type narrowing
 - follow up on release checklist
 - considered cleanup logic; parked for now
+- considered config defaults; parked for now
