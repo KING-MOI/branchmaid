@@ -129,3 +129,4 @@ All notable changes to this project are documented here. The format follows
 - edge case observed while testing
 - follow up on cleanup logic
 - slow start observed while testing
+- slow start observed while testing
