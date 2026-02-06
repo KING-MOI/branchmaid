@@ -2,11 +2,24 @@ import { confirm, isCancel } from "@clack/prompts";
 import pc from "picocolors";
 import { type Context, scanRepo } from "../context.js";
 import { deleteBranch } from "../delete.js";
+import { pick } from "../pick.js";
 import { renderEntries } from "../render.js";
 import { selectSweep } from "../sweep.js";
 
 export async function sweep(ctx: Context): Promise<number> {
-  const targets = selectSweep(scanRepo(ctx), ctx.config.sweep);
+  const entries = scanRepo(ctx);
+  let targets = selectSweep(entries, ctx.config.sweep);
+  if (ctx.flags.interactive) {
+    const picked = await pick(
+      entries.filter((e) => !e.protected),
+      targets,
+    );
+    if (!picked) {
+      console.log("aborted");
+      return 0;
+    }
+    targets = picked;
+  }
   if (targets.length === 0) {
     console.log("nothing to sweep");
     return 0;
@@ -16,7 +29,7 @@ export async function sweep(ctx: Context): Promise<number> {
     console.log(pc.dim(`\ndry run: ${targets.length} branch(es) would be deleted`));
     return 0;
   }
-  if (!ctx.flags.yes) {
+  if (!ctx.flags.yes && !ctx.flags.interactive) {
     if (!process.stdin.isTTY) {
       console.error("refusing to delete without --yes (or use --dry-run)");
       return 1;

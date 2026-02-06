@@ -22,6 +22,7 @@ const OPTIONS = {
   squash: { type: "boolean" },
   "dry-run": { type: "boolean", short: "n" },
   yes: { type: "boolean", short: "y" },
+  interactive: { type: "boolean", short: "i" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;

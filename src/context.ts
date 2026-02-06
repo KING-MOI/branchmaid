@@ -14,6 +14,7 @@ export interface Context {
     squash?: boolean;
     dryRun?: boolean;
     yes?: boolean;
+    interactive?: boolean;
   };
 }
 
