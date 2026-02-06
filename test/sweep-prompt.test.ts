@@ -45,3 +45,34 @@ describe("sweep confirmation", () => {
     expect(prompts.confirm).not.toHaveBeenCalled();
   });
 });
+
+describe("sweep --interactive", () => {
+  afterEach(() => vi.resetAllMocks());
+
+  it("offers unprotected branches with sweep targets preselected", async () => {
+    const r = repo();
+    sh(r, ["branch", "other"]);
+    prompts.multiselect.mockResolvedValue([]);
+    await run(["sweep", "-i"], r);
+    const opts = prompts.multiselect.mock.calls[0][0];
+    expect(opts.options.map((o: { value: string }) => o.value).sort()).toEqual(["merged-one", "other"]);
+    expect(opts.initialValues.sort()).toEqual(["merged-one", "other"]);
+  });
+
+  it("deletes only what was picked", async () => {
+    const r = repo();
+    sh(r, ["branch", "other"]);
+    prompts.multiselect.mockResolvedValue(["other"]);
+    await run(["sweep", "-i"], r);
+    expect(has(r, "other")).toBe(false);
+    expect(has(r, "merged-one")).toBe(true);
+  });
+
+  it("aborts on cancel", async () => {
+    const r = repo();
+    prompts.multiselect.mockResolvedValue(Symbol("clack:cancel"));
+    const { out } = await run(["sweep", "-i"], r);
+    expect(out).toContain("aborted");
+    expect(has(r, "merged-one")).toBe(true);
+  });
+});
