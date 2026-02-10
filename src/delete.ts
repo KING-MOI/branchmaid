@@ -17,11 +17,13 @@ export interface DeleteResult {
 
 export function deleteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteResult {
   if (opts.dryRun) return { name: branch.name, deleted: false };
+  let tag: string | undefined;
   try {
-    const tag = opts.backup === false ? undefined : createBackup(branch.name, branch.sha, opts.cwd);
+    if (opts.backup !== false) tag = createBackup(branch.name, branch.sha, opts.cwd);
     git(["branch", "-D", branch.name], opts.cwd);
     return { name: branch.name, tag, deleted: true };
   } catch (err) {
+    if (tag) git(["tag", "-d", tag], opts.cwd);
     return { name: branch.name, deleted: false, error: (err as Error).message };
   }
 }

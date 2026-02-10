@@ -45,3 +45,12 @@ describe("deleteBranch", () => {
     expect(res.error).toMatch(/cannot delete|checked out|used by worktree/i);
   });
 });
+
+describe("deleteBranch failure cleanup", () => {
+  it("does not leave a backup tag behind when deletion fails", () => {
+    const repo = makeRepo();
+    const res = deleteBranch(find(repo, "main"), { cwd: repo });
+    expect(res.deleted).toBe(false);
+    expect(listBackups(repo)).toEqual([]);
+  });
+});
