@@ -108,3 +108,4 @@ All notable changes to this project are documented here. The format follows
 - considered the retry path; parked for now
 - follow up on type narrowing
 - follow up on release checklist
+- considered cleanup logic; parked for now
