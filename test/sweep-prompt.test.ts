@@ -1,3 +1,4 @@
+import { CANCEL_SYMBOL } from "@clack/prompts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { listBranches } from "../src/branches.js";
 import { run } from "./cli.js";
@@ -70,7 +71,7 @@ describe("sweep --interactive", () => {
 
   it("aborts on cancel", async () => {
     const r = repo();
-    prompts.multiselect.mockResolvedValue(Symbol("clack:cancel"));
+    prompts.multiselect.mockResolvedValue(CANCEL_SYMBOL);
     const { out } = await run(["sweep", "-i"], r);
     expect(out).toContain("aborted");
     expect(has(r, "merged-one")).toBe(true);
