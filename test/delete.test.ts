@@ -54,3 +54,19 @@ describe("deleteBranch failure cleanup", () => {
     expect(listBackups(repo)).toEqual([]);
   });
 });
+
+describe("deleteBranch moved tip", () => {
+  it("skips a branch that gained commits after it was scanned", () => {
+    const repo = repoWith("busy");
+    const scanned = find(repo, "busy");
+    sh(repo, ["checkout", "-q", "busy"]);
+    commit(repo, "late work");
+    sh(repo, ["checkout", "-q", "main"]);
+
+    const res = deleteBranch(scanned, { cwd: repo });
+    expect(res.deleted).toBe(false);
+    expect(res.error).toMatch(/moved/);
+    expect(find(repo, "busy")).toBeDefined();
+    expect(listBackups(repo)).toEqual([]);
+  });
+});

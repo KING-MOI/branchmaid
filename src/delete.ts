@@ -19,6 +19,8 @@ export function deleteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteRe
   if (opts.dryRun) return { name: branch.name, deleted: false };
   let tag: string | undefined;
   try {
+    const tip = git(["rev-parse", `refs/heads/${branch.name}`], opts.cwd);
+    if (tip !== branch.sha) throw new Error(`tip moved since scan (${branch.sha.slice(0, 7)} -> ${tip.slice(0, 7)})`);
     if (opts.backup !== false) tag = createBackup(branch.name, branch.sha, opts.cwd);
     git(["branch", "-D", branch.name], opts.cwd);
     return { name: branch.name, tag, deleted: true };
