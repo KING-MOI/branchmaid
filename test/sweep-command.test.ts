@@ -46,3 +46,12 @@ describe("sweep", () => {
     expect((await run(["sweep", "-y"], makeRepo())).out).toContain("nothing to sweep");
   });
 });
+
+describe("sweep --no-backup", () => {
+  it("deletes without creating tags", async () => {
+    const r = repo();
+    await run(["sweep", "--yes", "--no-backup"], r);
+    expect(names(r)).toEqual(["main", "wip"]);
+    expect(listBackups(r)).toEqual([]);
+  });
+});
