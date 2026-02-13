@@ -23,6 +23,7 @@ const OPTIONS = {
   "dry-run": { type: "boolean", short: "n" },
   yes: { type: "boolean", short: "y" },
   interactive: { type: "boolean", short: "i" },
+  "no-backup": { type: "boolean" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
@@ -46,7 +47,7 @@ async function run(argv: string[], cwd: string): Promise<number> {
   const config = loadConfig(repoRoot(cwd));
   return command({
     cwd,
-    flags: { ...values, dryRun: values["dry-run"] },
+    flags: { ...values, dryRun: values["dry-run"], noBackup: values["no-backup"] },
     config,
     base: values.base ?? config.base ?? defaultBase(cwd),
     staleAfter: parseDuration(values["older-than"] ?? config.sweep.olderThan),

@@ -15,6 +15,7 @@ export interface Context {
     dryRun?: boolean;
     yes?: boolean;
     interactive?: boolean;
+    noBackup?: boolean;
   };
 }
 

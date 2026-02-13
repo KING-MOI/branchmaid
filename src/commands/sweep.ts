@@ -42,9 +42,9 @@ export async function sweep(ctx: Context): Promise<number> {
   }
   let failed = 0;
   for (const e of targets) {
-    const res = deleteBranch(e.branch, { cwd: ctx.cwd });
+    const res = deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup });
     if (res.deleted) {
-      console.log(`${pc.green("deleted")} ${res.name} ${pc.dim(`-> ${res.tag}`)}`);
+      console.log(`${pc.green("deleted")} ${res.name}${res.tag ? pc.dim(` -> ${res.tag}`) : ""}`);
     } else {
       failed++;
       console.error(`${pc.red("failed")} ${res.name}: ${res.error}`);
