@@ -93,3 +93,4 @@ All notable changes to this project are documented here. The format follows
 - double-check link checker behavior
 - double-check cleanup logic behavior
 - double-check type narrowing behavior
+- considered error messages; parked for now
