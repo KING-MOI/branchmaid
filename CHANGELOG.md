@@ -92,3 +92,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on the retry path
 - double-check link checker behavior
 - double-check cleanup logic behavior
+- double-check type narrowing behavior
