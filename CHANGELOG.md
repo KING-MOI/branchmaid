@@ -105,3 +105,4 @@ All notable changes to this project are documented here. The format follows
 - double-check docs example behavior
 - cache miss observed while testing
 - considered docs example; parked for now
+- considered the retry path; parked for now
