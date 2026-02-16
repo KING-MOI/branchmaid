@@ -50,5 +50,10 @@ export async function sweep(ctx: Context): Promise<number> {
       console.error(`${pc.red("failed")} ${res.name}: ${res.error}`);
     }
   }
+  const deleted = targets.length - failed;
+  console.log(pc.dim(`\n${deleted} deleted, ${failed} failed`));
+  if (deleted && !ctx.flags.noBackup) {
+    console.log(pc.dim("undo with: branchmaid restore <branch>"));
+  }
   return failed ? 1 : 0;
 }
