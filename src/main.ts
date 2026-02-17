@@ -1,5 +1,6 @@
 import { parseArgs } from "node:util";
 import pc from "picocolors";
+import { backups } from "./commands/backups.js";
 import { list } from "./commands/list.js";
 import { sweep } from "./commands/sweep.js";
 import { loadConfig } from "./config.js";
@@ -10,7 +11,7 @@ import { repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { version } from "./version.js";
 
-const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = { list, sweep };
+const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = { list, sweep, backups };
 
 const OPTIONS = {
   base: { type: "string" },
