@@ -47,6 +47,7 @@ async function run(argv: string[], cwd: string): Promise<number> {
   const config = loadConfig(repoRoot(cwd));
   return command({
     cwd,
+    args: positionals.slice(1),
     flags: { ...values, dryRun: values["dry-run"], noBackup: values["no-backup"] },
     config,
     base: values.base ?? config.base ?? defaultBase(cwd),

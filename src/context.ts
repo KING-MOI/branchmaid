@@ -3,6 +3,7 @@ import { type Entry, scan } from "./scan.js";
 
 export interface Context {
   cwd: string;
+  args: string[];
   config: Config;
   base: string;
   staleAfter: number;
