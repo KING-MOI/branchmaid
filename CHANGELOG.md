@@ -75,3 +75,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on type narrowing
 - slow start observed while testing
 - considered type narrowing; parked for now
+- follow up on type narrowing
