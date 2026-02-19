@@ -38,3 +38,13 @@ describe("backups and restore", () => {
     expect((await run(["restore", "nope"], r)).err).toContain("no backup found for nope");
   });
 });
+
+describe("backup commands without a base branch", () => {
+  it("work in repos with no main or master", async () => {
+    const r = makeRepo();
+    sh(r, ["branch", "-m", "main", "trunk"]);
+    const { code, out } = await run(["backups"], r);
+    expect(code).toBe(0);
+    expect(out).toContain("no backups");
+  });
+});

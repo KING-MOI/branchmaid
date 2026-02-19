@@ -7,9 +7,7 @@ import { sweep } from "./commands/sweep.js";
 import { loadConfig } from "./config.js";
 import { HELP } from "./help.js";
 import type { Context } from "./context.js";
-import { parseDuration } from "./duration.js";
 import { repoRoot } from "./git.js";
-import { defaultBase } from "./merged.js";
 import { version } from "./version.js";
 
 const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = { list, sweep, backups, restore };
@@ -52,8 +50,6 @@ async function run(argv: string[], cwd: string): Promise<number> {
     args: positionals.slice(1),
     flags: { ...values, dryRun: values["dry-run"], noBackup: values["no-backup"] },
     config,
-    base: values.base ?? config.base ?? defaultBase(cwd),
-    staleAfter: parseDuration(values["older-than"] ?? config.sweep.olderThan),
   });
 }
 
