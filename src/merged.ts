@@ -1,6 +1,11 @@
 import { git } from "./git.js";
 
 export function mergedInto(base: string, cwd?: string): Set<string> {
+  try {
+    git(["rev-parse", "--verify", "--quiet", `${base}^{commit}`], cwd);
+  } catch {
+    throw new Error(`base branch not found: ${base}`);
+  }
   const out = git(["branch", "--merged", base, "--format=%(refname:short)"], cwd);
   return new Set(out ? out.split("\n") : []);
 }

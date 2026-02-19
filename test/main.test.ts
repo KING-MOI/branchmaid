@@ -132,3 +132,11 @@ describe("main help and version", () => {
     expect(out).toMatch(/^\d+\.\d+\.\d+/);
   });
 });
+
+describe("main --base", () => {
+  it("explains when the base branch does not exist", async () => {
+    const { code, err } = await run(["--base", "nope"], makeRepo());
+    expect(code).toBe(1);
+    expect(err).toContain("base branch not found: nope");
+  });
+});
