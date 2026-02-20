@@ -61,3 +61,7 @@ export function restoreBackup(backup: Backup, cwd?: string): void {
 export function dropBackup(backup: Backup, cwd?: string): void {
   git(["tag", "-d", backup.tag], cwd);
 }
+
+export function backupsOlderThan(all: Backup[], ms: number, now = Date.now()): Backup[] {
+  return all.filter((b) => now - b.date.getTime() >= ms);
+}
