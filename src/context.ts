@@ -19,6 +19,7 @@ export interface Context {
     yes?: boolean;
     interactive?: boolean;
     noBackup?: boolean;
+    prune?: string;
   };
 }
 

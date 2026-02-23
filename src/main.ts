@@ -24,6 +24,7 @@ const OPTIONS = {
   yes: { type: "boolean", short: "y" },
   interactive: { type: "boolean", short: "i" },
   "no-backup": { type: "boolean" },
+  prune: { type: "string" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
