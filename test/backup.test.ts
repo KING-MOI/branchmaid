@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  backupsOlderThan,
   backupTagName,
   createBackup,
   dropBackup,
@@ -76,5 +77,14 @@ describe("dropBackup", () => {
     createBackup("x", sh(repo, ["rev-parse", "HEAD"]), repo);
     dropBackup(listBackups(repo)[0], repo);
     expect(listBackups(repo)).toEqual([]);
+  });
+});
+
+describe("backupsOlderThan", () => {
+  it("keeps only backups past the cutoff", () => {
+    const now = new Date("2026-03-01T00:00:00Z").getTime();
+    const mk = (branch: string, iso: string) => ({ tag: branch, branch, sha: "x", date: new Date(iso) });
+    const all = [mk("new", "2026-02-25T00:00:00Z"), mk("old", "2025-12-01T00:00:00Z")];
+    expect(backupsOlderThan(all, 30 * 86_400_000, now).map((b) => b.branch)).toEqual(["old"]);
   });
 });
