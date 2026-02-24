@@ -85,3 +85,4 @@ All notable changes to this project are documented here. The format follows
 - considered release checklist; parked for now
 - follow up on ci caching
 - flaky test observed while testing
+- double-check the macOS build behavior
