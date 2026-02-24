@@ -48,3 +48,27 @@ describe("backup commands without a base branch", () => {
     expect(out).toContain("no backups");
   });
 });
+
+describe("backups --prune", () => {
+  function withBackups(): string {
+    const r = makeRepo();
+    sh(r, ["tag", "branchmaid/backup/20200101T000000Z/ancient"]);
+    sh(r, ["tag", `branchmaid/backup/${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")}/recent`]);
+    return r;
+  }
+
+  it("drops backups older than the cutoff", async () => {
+    const r = withBackups();
+    const { out } = await run(["backups", "--prune", "30d"], r);
+    expect(out).toContain("1 backup(s) removed");
+    const left = (await run(["backups"], r)).out;
+    expect(left).toContain("recent");
+    expect(left).not.toContain("ancient");
+  });
+
+  it("respects --dry-run", async () => {
+    const r = withBackups();
+    expect((await run(["backups", "--prune", "30d", "-n"], r)).out).toContain("would drop");
+    expect((await run(["backups"], r)).out).toContain("ancient");
+  });
+});
