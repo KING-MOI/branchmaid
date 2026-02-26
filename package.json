@@ -24,5 +24,13 @@
   "dependencies": {
     "@clack/prompts": "^1.9.0",
     "picocolors": "^1.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityaverma/branchmaid.git"
+  },
+  "homepage": "https://github.com/adityaverma/branchmaid#readme",
+  "bugs": {
+    "url": "https://github.com/adityaverma/branchmaid/issues"
   }
 }
