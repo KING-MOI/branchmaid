@@ -58,3 +58,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on config defaults
 - considered cleanup logic; parked for now
 - slow start observed while testing
+- follow up on the retry path
