@@ -82,3 +82,4 @@ All notable changes to this project are documented here. The format follows
 - considered error messages; parked for now
 - considered type narrowing; parked for now
 - double-check cleanup logic behavior
+- considered release checklist; parked for now
