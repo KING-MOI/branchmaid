@@ -33,5 +33,8 @@
   "homepage": "https://github.com/adityaverma/branchmaid#readme",
   "bugs": {
     "url": "https://github.com/adityaverma/branchmaid/issues"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
