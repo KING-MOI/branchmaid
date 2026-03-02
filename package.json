@@ -36,5 +36,12 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "git",
+    "branches",
+    "cleanup",
+    "cli",
+    "prune"
   ]
 }
