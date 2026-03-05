@@ -3,7 +3,10 @@ import { git } from "./git.js";
 export const TAG_PREFIX = "branchmaid/backup";
 
 function stamp(date: Date): string {
-  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  return date
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d+Z$/, "Z");
 }
 
 export function backupTagName(branch: string, date = new Date()): string {

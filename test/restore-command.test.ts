@@ -53,7 +53,13 @@ describe("backups --prune", () => {
   function withBackups(): string {
     const r = makeRepo();
     sh(r, ["tag", "branchmaid/backup/20200101T000000Z/ancient"]);
-    sh(r, ["tag", `branchmaid/backup/${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")}/recent`]);
+    sh(r, [
+      "tag",
+      `branchmaid/backup/${new Date()
+        .toISOString()
+        .replace(/[-:]/g, "")
+        .replace(/\.\d+Z$/, "Z")}/recent`,
+    ]);
     return r;
   }
 

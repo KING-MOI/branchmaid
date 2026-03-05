@@ -21,22 +21,20 @@ const names = (es: Entry[]) => es.map((e) => e.branch.name);
 
 describe("selectSweep", () => {
   it("defaults to merged and gone", () => {
-    expect(names(selectSweep(entries, { olderThan: "30d", merged: true, gone: true, stale: false }))).toEqual([
-      "m",
-      "s",
-      "g",
-    ]);
+    expect(names(selectSweep(entries, { olderThan: "30d", merged: true, gone: true, stale: false }))).toEqual(
+      ["m", "s", "g"],
+    );
   });
 
   it("can include stale branches", () => {
-    expect(names(selectSweep(entries, { olderThan: "30d", merged: false, gone: false, stale: true }))).toEqual([
-      "old",
-    ]);
+    expect(
+      names(selectSweep(entries, { olderThan: "30d", merged: false, gone: false, stale: true })),
+    ).toEqual(["old"]);
   });
 
   it("never selects protected branches", () => {
-    expect(names(selectSweep(entries, { olderThan: "30d", merged: true, gone: true, stale: true }))).not.toContain(
-      "main",
-    );
+    expect(
+      names(selectSweep(entries, { olderThan: "30d", merged: true, gone: true, stale: true })),
+    ).not.toContain("main");
   });
 });

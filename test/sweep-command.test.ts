@@ -13,7 +13,10 @@ function repo(): string {
   return r;
 }
 
-const names = (r: string) => listBranches(r).map((b) => b.name).sort();
+const names = (r: string) =>
+  listBranches(r)
+    .map((b) => b.name)
+    .sort();
 
 describe("sweep", () => {
   it("dry run lists targets without deleting", async () => {

@@ -10,7 +10,12 @@ import type { Context } from "./context.js";
 import { repoRoot } from "./git.js";
 import { version } from "./version.js";
 
-const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = { list, sweep, backups, restore };
+const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = {
+  list,
+  sweep,
+  backups,
+  restore,
+};
 
 const OPTIONS = {
   base: { type: "string" },

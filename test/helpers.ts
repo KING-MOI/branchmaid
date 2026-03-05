@@ -12,9 +12,7 @@ export function sh(cwd: string, args: string[], env: Record<string, string> = {}
 }
 
 export function commit(dir: string, msg: string, date?: Date): void {
-  const env = date
-    ? { GIT_AUTHOR_DATE: date.toISOString(), GIT_COMMITTER_DATE: date.toISOString() }
-    : {};
+  const env = date ? { GIT_AUTHOR_DATE: date.toISOString(), GIT_COMMITTER_DATE: date.toISOString() } : {};
   sh(dir, ["commit", "-q", "--allow-empty", "-m", msg], env);
 }
 

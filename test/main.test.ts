@@ -64,7 +64,10 @@ describe("main list --json", () => {
     sh(repo, ["branch", "feature/a"]);
     const { out } = await run(["--json"], repo);
     const parsed = JSON.parse(out);
-    expect(parsed.map((e: { branch: { name: string } }) => e.branch.name).sort()).toEqual(["feature/a", "main"]);
+    expect(parsed.map((e: { branch: { name: string } }) => e.branch.name).sort()).toEqual([
+      "feature/a",
+      "main",
+    ]);
     expect(parsed[0]).toHaveProperty("reasons");
   });
 });

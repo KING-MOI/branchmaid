@@ -25,7 +25,14 @@ export function backups(ctx: Context): number {
   }
   const now = Date.now();
   console.log(
-    table(all.map((b) => [b.branch, pc.dim(formatAge(now - b.date.getTime())), pc.dim(b.sha.slice(0, 7)), pc.dim(b.tag)])),
+    table(
+      all.map((b) => [
+        b.branch,
+        pc.dim(formatAge(now - b.date.getTime())),
+        pc.dim(b.sha.slice(0, 7)),
+        pc.dim(b.tag),
+      ]),
+    ),
   );
   return 0;
 }
