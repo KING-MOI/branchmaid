@@ -20,5 +20,5 @@ export function classify(branch: Branch, ctx: ClassifyContext): Reason[] {
 }
 
 export function isProtected(branch: Branch, patterns: string[], base: string): boolean {
-  return branch.current || branch.name === base || matchesAny(branch.name, patterns);
+  return branch.current || branch.worktree !== "" || branch.name === base || matchesAny(branch.name, patterns);
 }
