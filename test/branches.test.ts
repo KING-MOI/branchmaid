@@ -1,3 +1,4 @@
+import { realpathSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { listBranches } from "../src/branches.js";
 import { addRemote, commit, makeRepo, sh } from "./helpers.js";
@@ -52,5 +53,16 @@ describe("listBranches upstream", () => {
     expect(shipped?.upstream).toBe("origin/shipped");
     expect(shipped?.gone).toBe(true);
     expect(listBranches(repo).find((b) => b.name === "main")?.gone).toBe(false);
+  });
+});
+
+describe("listBranches worktrees", () => {
+  it("reports the worktree path of checked out branches", () => {
+    const repo = makeRepo();
+    const wt = `${repo}-wt`;
+    sh(repo, ["worktree", "add", "-q", "-b", "elsewhere", wt]);
+    const elsewhere = listBranches(repo).find((b) => b.name === "elsewhere");
+    expect(realpathSync(elsewhere!.worktree)).toBe(realpathSync(wt));
+    expect(elsewhere!.current).toBe(false);
   });
 });
