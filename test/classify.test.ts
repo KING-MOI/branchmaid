@@ -39,3 +39,9 @@ describe("isProtected", () => {
     expect(isProtected(branch("feature/a"), ["release/*"], "main")).toBe(false);
   });
 });
+
+describe("isProtected worktrees", () => {
+  it("protects branches checked out in another worktree", () => {
+    expect(isProtected(branch("x", { worktree: "/tmp/wt" }), [], "main")).toBe(true);
+  });
+});
