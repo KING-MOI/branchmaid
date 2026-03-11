@@ -20,6 +20,7 @@ export interface Context {
     interactive?: boolean;
     noBackup?: boolean;
     prune?: string;
+    mine?: boolean;
   };
 }
 

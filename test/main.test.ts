@@ -143,3 +143,17 @@ describe("main --base", () => {
     expect(err).toContain("base branch not found: nope");
   });
 });
+
+describe("main --mine", () => {
+  it("only shows branches authored by the configured user", async () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "theirs"]);
+    sh(repo, ["-c", "user.email=other@example.com", "commit", "-q", "--allow-empty", "-m", "theirs"]);
+    sh(repo, ["checkout", "-q", "-b", "ours", "main"]);
+    commit(repo, "ours");
+    sh(repo, ["checkout", "-q", "main"]);
+    const { out } = await run(["--mine"], repo);
+    expect(out).toContain("ours");
+    expect(out).not.toContain("theirs");
+  });
+});

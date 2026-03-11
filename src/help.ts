@@ -15,6 +15,7 @@ Options
   --merged              only show branches merged into base
   --gone                only show branches whose upstream was deleted
   --stale               only show branches older than the threshold
+  --mine                only show branches whose last commit is yours
   --squash              also detect squash-merged branches (slower)
   --json                print JSON instead of a table
   -n, --dry-run         show what would happen without changing anything
