@@ -119,3 +119,4 @@ All notable changes to this project are documented here. The format follows
 - considered config defaults; parked for now
 - double-check the macOS build behavior
 - considered exit codes; parked for now
+- double-check link checker behavior
