@@ -21,6 +21,7 @@ export interface Context {
     noBackup?: boolean;
     prune?: string;
     mine?: boolean;
+    names?: boolean;
   };
 }
 

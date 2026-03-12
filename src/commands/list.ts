@@ -14,6 +14,10 @@ export function list(ctx: Context): number {
     shown = shown.filter((e) => e.branch.email === email);
   }
   shown.sort((a, b) => b.age - a.age);
+  if (ctx.flags.names) {
+    for (const e of shown) console.log(e.branch.name);
+    return 0;
+  }
   if (ctx.flags.json) {
     console.log(JSON.stringify(shown, null, 2));
     return 0;

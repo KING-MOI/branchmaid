@@ -31,6 +31,7 @@ const OPTIONS = {
   "no-backup": { type: "boolean" },
   prune: { type: "string" },
   mine: { type: "boolean" },
+  names: { type: "boolean" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
