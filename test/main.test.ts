@@ -157,3 +157,11 @@ describe("main --mine", () => {
     expect(out).not.toContain("theirs");
   });
 });
+
+describe("main --names", () => {
+  it("prints bare branch names", async () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "merged-one"]);
+    expect((await run(["--merged", "--names"], repo)).out).toBe("merged-one");
+  });
+});
