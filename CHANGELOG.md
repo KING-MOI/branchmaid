@@ -121,3 +121,4 @@ All notable changes to this project are documented here. The format follows
 - considered exit codes; parked for now
 - double-check link checker behavior
 - double-check error messages behavior
+- follow up on docs example
