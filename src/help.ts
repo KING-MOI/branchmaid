@@ -17,6 +17,7 @@ Options
   --stale               only show branches older than the threshold
   --mine                only show branches whose last commit is yours
   --squash              also detect squash-merged branches (slower)
+  --sort <key>          sort by age (default), name or author
   --names               print only branch names, one per line
   --json                print JSON instead of a table
   -n, --dry-run         show what would happen without changing anything

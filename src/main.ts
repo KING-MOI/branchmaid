@@ -32,6 +32,7 @@ const OPTIONS = {
   prune: { type: "string" },
   mine: { type: "boolean" },
   names: { type: "boolean" },
+  sort: { type: "string" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;

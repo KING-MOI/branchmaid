@@ -1,6 +1,13 @@
 import { type Context, scanRepo } from "../context.js";
 import { git } from "../git.js";
 import { renderEntries } from "../render.js";
+import type { Entry } from "../scan.js";
+
+const SORTERS: Record<string, (a: Entry, b: Entry) => number> = {
+  age: (a, b) => b.age - a.age,
+  name: (a, b) => a.branch.name.localeCompare(b.branch.name),
+  author: (a, b) => a.branch.author.localeCompare(b.branch.author) || b.age - a.age,
+};
 
 export function list(ctx: Context): number {
   const wanted: string[] = (["merged", "gone", "stale"] as const).filter((r) => ctx.flags[r]);
@@ -13,7 +20,10 @@ export function list(ctx: Context): number {
     const email = git(["config", "user.email"], ctx.cwd);
     shown = shown.filter((e) => e.branch.email === email);
   }
-  shown.sort((a, b) => b.age - a.age);
+  const sort = ctx.flags.sort ?? "age";
+  if (!(sort in SORTERS))
+    throw new Error(`unknown sort key: ${sort} (use ${Object.keys(SORTERS).join(", ")})`);
+  shown.sort(SORTERS[sort]);
   if (ctx.flags.names) {
     for (const e of shown) console.log(e.branch.name);
     return 0;

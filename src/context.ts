@@ -22,6 +22,7 @@ export interface Context {
     prune?: string;
     mine?: boolean;
     names?: boolean;
+    sort?: string;
   };
 }
 
