@@ -178,3 +178,12 @@ describe("main --sort", () => {
     expect((await run(["--sort", "size"], makeRepo())).err).toContain("unknown sort key: size");
   });
 });
+
+describe("main --limit", () => {
+  it("caps the number of rows", async () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "a"]);
+    sh(repo, ["branch", "b"]);
+    expect((await run(["--sort", "name", "--names", "--limit", "2"], repo)).out).toBe("a\nb");
+  });
+});
