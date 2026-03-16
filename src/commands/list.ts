@@ -24,6 +24,7 @@ export function list(ctx: Context): number {
   if (!(sort in SORTERS))
     throw new Error(`unknown sort key: ${sort} (use ${Object.keys(SORTERS).join(", ")})`);
   shown.sort(SORTERS[sort]);
+  if (ctx.flags.limit) shown = shown.slice(0, Number(ctx.flags.limit));
   if (ctx.flags.names) {
     for (const e of shown) console.log(e.branch.name);
     return 0;

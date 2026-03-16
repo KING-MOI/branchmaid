@@ -23,6 +23,7 @@ export interface Context {
     mine?: boolean;
     names?: boolean;
     sort?: string;
+    limit?: string;
   };
 }
 

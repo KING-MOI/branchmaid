@@ -33,6 +33,7 @@ const OPTIONS = {
   mine: { type: "boolean" },
   names: { type: "boolean" },
   sort: { type: "string" },
+  limit: { type: "string" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
