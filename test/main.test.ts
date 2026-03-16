@@ -165,3 +165,16 @@ describe("main --names", () => {
     expect((await run(["--merged", "--names"], repo)).out).toBe("merged-one");
   });
 });
+
+describe("main --sort", () => {
+  it("sorts by name", async () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "b"]);
+    sh(repo, ["branch", "a"]);
+    expect((await run(["--sort", "name", "--names"], repo)).out).toBe("a\nb\nmain");
+  });
+
+  it("rejects unknown keys", async () => {
+    expect((await run(["--sort", "size"], makeRepo())).err).toContain("unknown sort key: size");
+  });
+});
