@@ -77,3 +77,4 @@ All notable changes to this project are documented here. The format follows
 - considered type narrowing; parked for now
 - follow up on type narrowing
 - follow up on the retry path
+- double-check release checklist behavior
