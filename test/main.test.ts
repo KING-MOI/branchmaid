@@ -191,7 +191,7 @@ describe("main --limit", () => {
 describe("main --limit validation", () => {
   it("rejects non-positive or non-numeric limits", async () => {
     for (const bad of ["abc", "0", "-1", "1.5"]) {
-      const { code, err } = await run(["--limit", bad], makeRepo());
+      const { code, err } = await run([`--limit=${bad}`], makeRepo());
       expect(code).toBe(1);
       expect(err).toContain("--limit must be a positive integer");
     }
