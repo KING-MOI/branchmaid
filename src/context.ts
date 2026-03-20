@@ -1,5 +1,6 @@
 import type { Config } from "./config.js";
 import { parseDuration } from "./duration.js";
+import { git } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { type Entry, scan } from "./scan.js";
 
@@ -28,7 +29,7 @@ export interface Context {
 }
 
 export function scanRepo(ctx: Context): Entry[] {
-  return scan(
+  const entries = scan(
     {
       base: ctx.flags.base ?? ctx.config.base ?? defaultBase(ctx.cwd),
       staleAfter: parseDuration(ctx.flags["older-than"] ?? ctx.config.sweep.olderThan),
@@ -37,4 +38,7 @@ export function scanRepo(ctx: Context): Entry[] {
     },
     ctx.cwd,
   );
+  if (!ctx.flags.mine) return entries;
+  const email = git(["config", "user.email"], ctx.cwd);
+  return entries.filter((e) => e.branch.email === email);
 }

@@ -1,5 +1,4 @@
 import { type Context, scanRepo } from "../context.js";
-import { git } from "../git.js";
 import { renderEntries } from "../render.js";
 import type { Entry } from "../scan.js";
 
@@ -16,10 +15,6 @@ export function list(ctx: Context): number {
   let shown = wanted.length
     ? entries.filter((e) => !e.protected && e.reasons.some((r) => wanted.includes(r)))
     : entries;
-  if (ctx.flags.mine) {
-    const email = git(["config", "user.email"], ctx.cwd);
-    shown = shown.filter((e) => e.branch.email === email);
-  }
   const sort = ctx.flags.sort ?? "age";
   if (!(sort in SORTERS))
     throw new Error(`unknown sort key: ${sort} (use ${Object.keys(SORTERS).join(", ")})`);
