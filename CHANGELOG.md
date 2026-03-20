@@ -124,3 +124,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on docs example
 - double-check type narrowing behavior
 - flaky test observed while testing
+- follow up on ci caching
