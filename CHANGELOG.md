@@ -84,3 +84,4 @@ All notable changes to this project are documented here. The format follows
 - double-check cleanup logic behavior
 - considered release checklist; parked for now
 - follow up on ci caching
+- flaky test observed while testing
