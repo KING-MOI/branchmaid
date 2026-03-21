@@ -58,3 +58,16 @@ describe("sweep --no-backup", () => {
     expect(listBackups(r)).toEqual([]);
   });
 });
+
+describe("sweep --mine", () => {
+  it("leaves other people's merged branches alone", async () => {
+    const r = makeRepo();
+    sh(r, ["checkout", "-q", "-b", "theirs"]);
+    sh(r, ["-c", "user.email=other@example.com", "commit", "-q", "--allow-empty", "-m", "t"]);
+    sh(r, ["checkout", "-q", "main"]);
+    sh(r, ["merge", "-q", "--ff-only", "theirs"]);
+    sh(r, ["branch", "ours", "HEAD~1"]);
+    await run(["sweep", "-y", "--mine"], r);
+    expect(names(r)).toEqual(["main", "theirs"]);
+  });
+});
