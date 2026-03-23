@@ -8,7 +8,12 @@ import { selectSweep } from "../sweep.js";
 
 export async function sweep(ctx: Context): Promise<number> {
   const entries = scanRepo(ctx);
-  let targets = selectSweep(entries, ctx.config.sweep);
+  const { merged, gone, stale } = ctx.flags;
+  const cfg =
+    merged || gone || stale
+      ? { ...ctx.config.sweep, merged: !!merged, gone: !!gone, stale: !!stale }
+      : ctx.config.sweep;
+  let targets = selectSweep(entries, cfg);
   if (ctx.flags.interactive) {
     const picked = await pick(
       entries.filter((e) => !e.protected),
