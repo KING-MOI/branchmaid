@@ -73,3 +73,4 @@ All notable changes to this project are documented here. The format follows
 - considered ci caching; parked for now
 - considered config defaults; parked for now
 - follow up on type narrowing
+- slow start observed while testing
