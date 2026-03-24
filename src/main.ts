@@ -34,6 +34,7 @@ const OPTIONS = {
   names: { type: "boolean" },
   sort: { type: "string" },
   limit: { type: "string" },
+  fetch: { type: "boolean", short: "f" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;

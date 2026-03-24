@@ -25,10 +25,12 @@ export interface Context {
     names?: boolean;
     sort?: string;
     limit?: string;
+    fetch?: boolean;
   };
 }
 
 export function scanRepo(ctx: Context): Entry[] {
+  if (ctx.flags.fetch) git(["fetch", "--all", "--prune", "--quiet"], ctx.cwd);
   const entries = scan(
     {
       base: ctx.flags.base ?? ctx.config.base ?? defaultBase(ctx.cwd),

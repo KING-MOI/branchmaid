@@ -12,6 +12,7 @@ Commands
 Options
   --base <name>         branch to compare against (default: origin HEAD, main or master)
   --older-than <dur>    staleness threshold, e.g. 30d, 2w, 3mo (default: 30d)
+  -f, --fetch           run git fetch --prune first so gone branches are current
   --merged              only show branches merged into base
   --gone                only show branches whose upstream was deleted
   --stale               only show branches older than the threshold
