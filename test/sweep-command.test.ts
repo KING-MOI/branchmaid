@@ -1,3 +1,5 @@
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { listBackups } from "../src/backup.js";
 import { listBranches } from "../src/branches.js";
@@ -69,5 +71,28 @@ describe("sweep --mine", () => {
     sh(r, ["branch", "ours", "HEAD~1"]);
     await run(["sweep", "-y", "--mine"], r);
     expect(names(r)).toEqual(["main", "theirs"]);
+  });
+});
+
+describe("sweep kind flags", () => {
+  function mixed(): string {
+    const r = repo();
+    sh(r, ["checkout", "-q", "-b", "ancient"]);
+    commit(r, "old", new Date("2020-01-01T00:00:00Z"));
+    sh(r, ["checkout", "-q", "main"]);
+    return r;
+  }
+
+  it("--stale sweeps only stale branches", async () => {
+    const r = mixed();
+    await run(["sweep", "-y", "--stale"], r);
+    expect(names(r)).toEqual(["main", "merged-one", "wip"]);
+  });
+
+  it("--merged ignores stale even if config enables it", async () => {
+    const r = mixed();
+    writeFileSync(join(r, ".branchmaidrc"), JSON.stringify({ sweep: { stale: true } }));
+    await run(["sweep", "-y", "--merged"], r);
+    expect(names(r)).toEqual(["ancient", "main", "wip"]);
   });
 });
