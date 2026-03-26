@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { run } from "./cli.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 describe("main list", () => {
   it("lists branches by default", async () => {
@@ -195,5 +195,20 @@ describe("main --limit validation", () => {
       expect(code).toBe(1);
       expect(err).toContain("--limit must be a positive integer");
     }
+  });
+});
+
+describe("main --fetch", () => {
+  it("notices upstreams deleted on the remote", async () => {
+    const repo = makeRepo();
+    const remote = addRemote(repo);
+    sh(repo, ["checkout", "-q", "-b", "shipped"]);
+    commit(repo, "ship");
+    sh(repo, ["push", "-q", "-u", "origin", "shipped"]);
+    sh(repo, ["checkout", "-q", "main"]);
+    sh(remote, ["branch", "-D", "shipped"]);
+
+    expect((await run(["--gone", "--names"], repo)).out).toBe("");
+    expect((await run(["--gone", "--names", "--fetch"], repo)).out).toBe("shipped");
   });
 });
