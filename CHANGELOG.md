@@ -90,3 +90,4 @@ All notable changes to this project are documented here. The format follows
 - flaky test observed while testing
 - double-check exit codes behavior
 - follow up on the retry path
+- double-check link checker behavior
