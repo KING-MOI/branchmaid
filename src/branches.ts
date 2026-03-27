@@ -11,6 +11,8 @@ export interface Branch {
   upstream: string;
   gone: boolean;
   worktree: string;
+  remote: string;
+  remoteRef: string;
 }
 
 const FIELDS = [
@@ -24,13 +26,16 @@ const FIELDS = [
   "%(upstream:short)",
   "%(upstream:track)",
   "%(worktreepath)",
+  "%(upstream:remotename)",
+  "%(upstream:remoteref)",
 ];
 
 export function listBranches(cwd?: string): Branch[] {
   const out = git(["for-each-ref", `--format=${FIELDS.join("%00")}`, "refs/heads"], cwd);
   if (!out) return [];
   return out.split("\n").map((line) => {
-    const [name, sha, ts, author, email, subject, head, upstream, track, worktree] = line.split("\0");
+    const [name, sha, ts, author, email, subject, head, upstream, track, worktree, remote, remoteRef] =
+      line.split("\0");
     return {
       name,
       sha,
@@ -42,6 +47,8 @@ export function listBranches(cwd?: string): Branch[] {
       upstream,
       gone: track === "[gone]",
       worktree,
+      remote,
+      remoteRef,
     };
   });
 }

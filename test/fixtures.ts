@@ -12,6 +12,8 @@ export function branch(name: string, overrides: Partial<Branch> = {}): Branch {
     upstream: "",
     gone: false,
     worktree: "",
+    remote: "",
+    remoteRef: "",
     ...overrides,
   };
 }
