@@ -66,3 +66,15 @@ describe("listBranches worktrees", () => {
     expect(elsewhere!.current).toBe(false);
   });
 });
+
+describe("listBranches remote refs", () => {
+  it("splits upstream into remote and ref", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["checkout", "-q", "-b", "feat/x"]);
+    sh(repo, ["push", "-q", "-u", "origin", "feat/x"]);
+    const b = listBranches(repo).find((x) => x.name === "feat/x")!;
+    expect(b.remote).toBe("origin");
+    expect(b.remoteRef).toBe("refs/heads/feat/x");
+  });
+});
