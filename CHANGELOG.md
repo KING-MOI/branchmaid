@@ -78,3 +78,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on type narrowing
 - follow up on the retry path
 - double-check release checklist behavior
+- double-check cleanup logic behavior
