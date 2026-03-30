@@ -47,9 +47,16 @@ export async function sweep(ctx: Context): Promise<number> {
   }
   let failed = 0;
   for (const e of targets) {
-    const res = deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup });
+    const res = deleteBranch(e.branch, {
+      cwd: ctx.cwd,
+      backup: !ctx.flags.noBackup,
+      remote: ctx.flags.remote,
+    });
     if (res.deleted) {
       console.log(`${pc.green("deleted")} ${res.name}${res.tag ? pc.dim(` -> ${res.tag}`) : ""}`);
+      if (res.remoteDeleted) console.log(`${pc.green("deleted")} ${e.branch.upstream}`);
+      if (res.remoteDeleted === false)
+        console.error(`${pc.yellow("kept")} ${e.branch.upstream}: ${res.error}`);
     } else {
       failed++;
       console.error(`${pc.red("failed")} ${res.name}: ${res.error}`);

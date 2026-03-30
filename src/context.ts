@@ -26,6 +26,7 @@ export interface Context {
     sort?: string;
     limit?: string;
     fetch?: boolean;
+    remote?: boolean;
   };
 }
 

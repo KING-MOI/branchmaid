@@ -35,6 +35,7 @@ const OPTIONS = {
   sort: { type: "string" },
   limit: { type: "string" },
   fetch: { type: "boolean", short: "f" },
+  remote: { type: "boolean" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
