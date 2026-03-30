@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { listBackups } from "../src/backup.js";
 import { listBranches } from "../src/branches.js";
 import { run } from "./cli.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 function repo(): string {
   const r = makeRepo();
@@ -94,5 +94,34 @@ describe("sweep kind flags", () => {
     writeFileSync(join(r, ".branchmaidrc"), JSON.stringify({ sweep: { stale: true } }));
     await run(["sweep", "-y", "--merged"], r);
     expect(names(r)).toEqual(["ancient", "main", "wip"]);
+  });
+});
+
+describe("sweep --remote", () => {
+  function pushed(): { r: string; remote: string } {
+    const r = makeRepo();
+    const remote = addRemote(r);
+    sh(r, ["checkout", "-q", "-b", "done"]);
+    commit(r, "done");
+    sh(r, ["push", "-q", "-u", "origin", "done"]);
+    sh(r, ["checkout", "-q", "main"]);
+    sh(r, ["merge", "-q", "--ff-only", "done"]);
+    return { r, remote };
+  }
+
+  const remoteHas = (remote: string, name: string) =>
+    sh(remote, ["branch", "--list", name, "--format=%(refname:short)"]) === name;
+
+  it("deletes the upstream too", async () => {
+    const { r, remote } = pushed();
+    const { out } = await run(["sweep", "-y", "--remote"], r);
+    expect(out).toContain("deleted origin/done");
+    expect(remoteHas(remote, "done")).toBe(false);
+  });
+
+  it("leaves the remote alone by default", async () => {
+    const { r, remote } = pushed();
+    await run(["sweep", "-y"], r);
+    expect(remoteHas(remote, "done")).toBe(true);
   });
 });
