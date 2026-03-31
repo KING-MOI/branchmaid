@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { listBackups } from "../src/backup.js";
 import { listBranches } from "../src/branches.js";
 import { deleteBranch } from "../src/delete.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 function repoWith(name: string): string {
   const repo = makeRepo();
@@ -68,5 +68,26 @@ describe("deleteBranch moved tip", () => {
     expect(res.error).toMatch(/moved/);
     expect(find(repo, "busy")).toBeDefined();
     expect(listBackups(repo)).toEqual([]);
+  });
+});
+
+describe("deleteBranch remote safety", () => {
+  it("keeps a remote branch that has commits the backup does not", () => {
+    const repo = makeRepo();
+    const remote = addRemote(repo);
+    sh(repo, ["checkout", "-q", "-b", "shared"]);
+    commit(repo, "mine");
+    sh(repo, ["push", "-q", "-u", "origin", "shared"]);
+    const other = `${remote}-clone`;
+    sh(repo, ["clone", "-q", remote, other]);
+    sh(other, ["checkout", "-q", "shared"]);
+    sh(other, ["-c", "user.name=O", "-c", "user.email=o@x", "commit", "-q", "--allow-empty", "-m", "theirs"]);
+    sh(other, ["push", "-q", "origin", "shared"]);
+    sh(repo, ["checkout", "-q", "main"]);
+
+    const res = deleteBranch(find(repo, "shared"), { cwd: repo, remote: true });
+    expect(res.deleted).toBe(true);
+    expect(res.remoteDeleted).toBe(false);
+    expect(sh(remote, ["branch", "--list", "shared"])).toContain("shared");
   });
 });

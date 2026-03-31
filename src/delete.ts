@@ -32,7 +32,16 @@ export function deleteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteRe
   }
   if (!opts.remote || !branch.remote || branch.gone) return { name: branch.name, tag, deleted: true };
   try {
-    git(["push", "--quiet", branch.remote, "--delete", branch.remoteRef], opts.cwd);
+    git(
+      [
+        "push",
+        "--quiet",
+        `--force-with-lease=${branch.remoteRef}:${branch.sha}`,
+        branch.remote,
+        `:${branch.remoteRef}`,
+      ],
+      opts.cwd,
+    );
     return { name: branch.name, tag, deleted: true, remoteDeleted: true };
   } catch (err) {
     return { name: branch.name, tag, deleted: true, remoteDeleted: false, error: (err as Error).message };
