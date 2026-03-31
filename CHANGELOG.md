@@ -107,3 +107,4 @@ All notable changes to this project are documented here. The format follows
 - considered docs example; parked for now
 - considered the retry path; parked for now
 - follow up on type narrowing
+- follow up on release checklist
