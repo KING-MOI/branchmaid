@@ -16,6 +16,7 @@ const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = {
   sweep,
   backups,
   restore,
+  init,
 };
 
 const OPTIONS = {
