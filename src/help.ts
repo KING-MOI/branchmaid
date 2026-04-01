@@ -8,6 +8,7 @@ Commands
   sweep                 delete merged and gone branches, keeping backup tags
   backups               list backup tags left by sweep
   restore <branch>      recreate a deleted branch from its latest backup
+  init                  write a .branchmaidrc with the defaults
 
 Options
   --base <name>         branch to compare against (default: origin HEAD, main or master)

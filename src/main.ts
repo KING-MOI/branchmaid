@@ -1,6 +1,7 @@
 import { parseArgs } from "node:util";
 import pc from "picocolors";
 import { backups } from "./commands/backups.js";
+import { init } from "./commands/init.js";
 import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
 import { sweep } from "./commands/sweep.js";
