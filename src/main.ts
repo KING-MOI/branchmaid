@@ -19,7 +19,7 @@ const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = {
   init,
 };
 
-const OPTIONS = {
+export const OPTIONS = {
   base: { type: "string" },
   "older-than": { type: "string" },
   json: { type: "boolean" },
