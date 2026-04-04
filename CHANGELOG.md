@@ -98,3 +98,4 @@ All notable changes to this project are documented here. The format follows
 - edge case observed while testing
 - double-check config defaults behavior
 - slow start observed while testing
+- considered type narrowing; parked for now
