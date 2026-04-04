@@ -73,9 +73,16 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
   return raw;
 }
 
-export function loadConfig(dir = process.cwd()): Config {
+export function resolveConfig(dir = process.cwd()): { config: Config; source?: string } {
   const found = findRaw(dir);
-  if (!found) return DEFAULTS;
+  if (!found) return { config: DEFAULTS };
   const raw = validateConfig(found.raw, found.source);
-  return { ...DEFAULTS, ...raw, sweep: { ...DEFAULTS.sweep, ...raw.sweep } };
+  return {
+    config: { ...DEFAULTS, ...raw, sweep: { ...DEFAULTS.sweep, ...raw.sweep } },
+    source: found.source,
+  };
+}
+
+export function loadConfig(dir = process.cwd()): Config {
+  return resolveConfig(dir).config;
 }
