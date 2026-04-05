@@ -1,6 +1,7 @@
 import { parseArgs } from "node:util";
 import pc from "picocolors";
 import { backups } from "./commands/backups.js";
+import { config } from "./commands/config.js";
 import { init } from "./commands/init.js";
 import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
@@ -17,6 +18,7 @@ const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>> = {
   backups,
   restore,
   init,
+  config,
 };
 
 export const OPTIONS = {
@@ -58,12 +60,11 @@ async function run(argv: string[], cwd: string): Promise<number> {
     console.error(`unknown command: ${name}`);
     return 1;
   }
-  const config = loadConfig(repoRoot(cwd));
   return command({
     cwd,
     args: positionals.slice(1),
     flags: { ...values, dryRun: values["dry-run"], noBackup: values["no-backup"] },
-    config,
+    config: loadConfig(repoRoot(cwd)),
   });
 }
 

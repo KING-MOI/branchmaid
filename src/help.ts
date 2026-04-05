@@ -9,6 +9,7 @@ Commands
   backups               list backup tags left by sweep
   restore <branch>      recreate a deleted branch from its latest backup
   init                  write a .branchmaidrc with the defaults
+  config                print the effective config and where it came from
 
 Options
   --base <name>         branch to compare against (default: origin HEAD, main or master)
