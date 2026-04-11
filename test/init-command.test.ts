@@ -22,3 +22,19 @@ describe("init", () => {
     expect(readFileSync(join(r, ".branchmaidrc"), "utf8")).toBe("{}");
   });
 });
+
+describe("config", () => {
+  it("prints defaults when nothing is configured", async () => {
+    const { out, err } = await run(["config"], makeRepo());
+    expect(JSON.parse(out)).toEqual(DEFAULTS);
+    expect(err).toContain("source: defaults");
+  });
+
+  it("names the file it loaded", async () => {
+    const r = makeRepo();
+    writeFileSync(join(r, ".branchmaidrc"), JSON.stringify({ base: "dev" }));
+    const { out, err } = await run(["config"], r);
+    expect(JSON.parse(out).base).toBe("dev");
+    expect(err).toContain(".branchmaidrc");
+  });
+});
