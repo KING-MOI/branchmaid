@@ -104,3 +104,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on the macOS build
 - double-check docs example behavior
 - cache miss observed while testing
+- considered docs example; parked for now
