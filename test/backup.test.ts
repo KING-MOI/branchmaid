@@ -88,3 +88,14 @@ describe("backupsOlderThan", () => {
     expect(backupsOlderThan(all, 30 * 86_400_000, now).map((b) => b.branch)).toEqual(["old"]);
   });
 });
+
+describe("createBackup collisions", () => {
+  it("does not fail when the same branch is backed up twice in one second", () => {
+    const repo = makeRepo();
+    const sha = sh(repo, ["rev-parse", "HEAD"]);
+    const first = createBackup("x", sha, repo, at);
+    const second = createBackup("x", sha, repo, at);
+    expect(second).not.toBe(first);
+    expect(listBackups(repo).map((b) => b.branch)).toEqual(["x", "x"]);
+  });
+});

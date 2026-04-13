@@ -9,14 +9,20 @@ function stamp(date: Date): string {
     .replace(/\.\d+Z$/, "Z");
 }
 
-export function backupTagName(branch: string, date = new Date()): string {
-  return `${TAG_PREFIX}/${stamp(date)}/${branch}`;
+export function backupTagName(branch: string, date = new Date(), n = 1): string {
+  return `${TAG_PREFIX}/${stamp(date)}${n > 1 ? `.${n}` : ""}/${branch}`;
 }
 
 export function createBackup(branch: string, sha: string, cwd?: string, date = new Date()): string {
-  const tag = backupTagName(branch, date);
-  git(["tag", tag, sha], cwd);
-  return tag;
+  for (let n = 1; ; n++) {
+    const tag = backupTagName(branch, date, n);
+    try {
+      git(["rev-parse", "--verify", "--quiet", `refs/tags/${tag}`], cwd);
+    } catch {
+      git(["tag", tag, sha], cwd);
+      return tag;
+    }
+  }
 }
 
 export interface Backup {
@@ -27,7 +33,7 @@ export interface Backup {
 }
 
 function parseStamp(s: string): Date {
-  const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(s);
+  const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z(?:\.\d+)?$/.exec(s);
   if (!m) return new Date(NaN);
   return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
 }
