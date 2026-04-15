@@ -7,7 +7,7 @@ Commands
   list                  show local branches, oldest first (default)
   sweep                 delete merged and gone branches, keeping backup tags
   backups               list backup tags left by sweep
-  restore <branch>      recreate a deleted branch from its latest backup
+  restore <branch|tag>  recreate a deleted branch from its latest backup or a given tag
   init                  write a .branchmaidrc with the defaults
   config                print the effective config and where it came from
 
