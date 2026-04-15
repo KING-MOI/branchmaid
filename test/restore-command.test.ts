@@ -78,3 +78,13 @@ describe("backups --prune", () => {
     expect((await run(["backups"], r)).out).toContain("ancient");
   });
 });
+
+describe("restore --as", () => {
+  it("restores under a different name", async () => {
+    const r = swept();
+    await run(["sweep", "-y"], r);
+    const { out } = await run(["restore", "feature/done", "--as", "feature/again"], r);
+    expect(out).toContain("restored feature/again");
+    expect(listBranches(r).map((b) => b.name)).toContain("feature/again");
+  });
+});
