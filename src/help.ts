@@ -29,6 +29,7 @@ Options
   -i, --interactive     pick branches to delete from a list
   --remote              with sweep: also delete the branch on its remote
   --no-backup           do not create backup tags when deleting
+  --as <name>           with restore: recreate the branch under a different name
   --prune <dur>         with backups: drop backup tags older than <dur>
   -h, --help            show this help
   -v, --version         print the version

@@ -13,7 +13,8 @@ export function restore(ctx: Context): number {
     console.error(`no backup found for ${name}`);
     return 1;
   }
-  restoreBackup(backup, ctx.cwd);
-  console.log(`${pc.green("restored")} ${name} at ${backup.sha.slice(0, 7)}`);
+  const target = ctx.flags.as ?? name;
+  restoreBackup(backup, ctx.cwd, target);
+  console.log(`${pc.green("restored")} ${target} at ${backup.sha.slice(0, 7)}`);
   return 0;
 }

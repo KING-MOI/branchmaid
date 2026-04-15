@@ -27,6 +27,7 @@ export interface Context {
     limit?: string;
     fetch?: boolean;
     remote?: boolean;
+    as?: string;
   };
 }
 

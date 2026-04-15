@@ -40,6 +40,7 @@ export const OPTIONS = {
   limit: { type: "string" },
   fetch: { type: "boolean", short: "f" },
   remote: { type: "boolean" },
+  as: { type: "string" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
