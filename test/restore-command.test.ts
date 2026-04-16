@@ -88,3 +88,24 @@ describe("restore --as", () => {
     expect(listBranches(r).map((b) => b.name)).toContain("feature/again");
   });
 });
+
+describe("restore by tag", () => {
+  it("picks the exact backup named", async () => {
+    const r = makeRepo();
+    const first = sh(r, ["rev-parse", "HEAD"]);
+    sh(r, ["tag", "branchmaid/backup/20200101T000000Z/thing", first]);
+    sh(r, ["commit", "-q", "--allow-empty", "-m", "later"]);
+    sh(r, ["tag", "branchmaid/backup/20210101T000000Z/thing"]);
+    await run(["restore", "branchmaid/backup/20200101T000000Z/thing"], r);
+    expect(sh(r, ["rev-parse", "thing"])).toBe(first);
+  });
+
+  it("uses the newest backup when given a branch name", async () => {
+    const r = makeRepo();
+    sh(r, ["tag", "branchmaid/backup/20200101T000000Z/thing", "HEAD"]);
+    sh(r, ["commit", "-q", "--allow-empty", "-m", "later"]);
+    sh(r, ["tag", "branchmaid/backup/20210101T000000Z/thing"]);
+    await run(["restore", "thing"], r);
+    expect(sh(r, ["rev-parse", "thing"])).toBe(sh(r, ["rev-parse", "HEAD"]));
+  });
+});
