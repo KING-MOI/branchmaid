@@ -26,3 +26,16 @@ export function renderEntries(entries: Entry[]): string {
     ]),
   );
 }
+
+export function summarize(entries: Entry[]): string {
+  const counts: Record<string, number> = {};
+  for (const e of entries) {
+    if (e.protected) continue;
+    for (const r of e.reasons) counts[r] = (counts[r] ?? 0) + 1;
+  }
+  const parts = [`${entries.length} branch${entries.length === 1 ? "" : "es"}`];
+  for (const r of ["merged", "squashed", "gone", "stale"] as const) {
+    if (counts[r]) parts.push(`${counts[r]} ${r}`);
+  }
+  return parts.join(" · ");
+}
