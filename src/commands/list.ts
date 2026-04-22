@@ -1,5 +1,6 @@
+import pc from "picocolors";
 import { type Context, scanRepo } from "../context.js";
-import { renderEntries } from "../render.js";
+import { renderEntries, summarize } from "../render.js";
 import type { Entry } from "../scan.js";
 
 const SORTERS: Record<string, (a: Entry, b: Entry) => number> = {
@@ -33,5 +34,6 @@ export function list(ctx: Context): number {
     return 0;
   }
   console.log(renderEntries(shown));
+  console.log(pc.dim(`\n${summarize(shown)}`));
   return 0;
 }
