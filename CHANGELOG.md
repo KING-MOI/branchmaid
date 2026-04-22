@@ -120,3 +120,4 @@ All notable changes to this project are documented here. The format follows
 - double-check the macOS build behavior
 - considered exit codes; parked for now
 - double-check link checker behavior
+- double-check error messages behavior
