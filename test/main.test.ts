@@ -212,3 +212,9 @@ describe("main --fetch", () => {
     expect((await run(["--gone", "--names", "--fetch"], repo)).out).toBe("shipped");
   });
 });
+
+describe("main empty results", () => {
+  it("says nothing matched instead of printing a blank table", async () => {
+    expect((await run(["--gone"], makeRepo())).out).toBe("no branches match");
+  });
+});

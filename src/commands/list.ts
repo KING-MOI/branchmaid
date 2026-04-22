@@ -33,6 +33,10 @@ export function list(ctx: Context): number {
     console.log(JSON.stringify(shown, null, 2));
     return 0;
   }
+  if (shown.length === 0) {
+    console.log("no branches match");
+    return 0;
+  }
   console.log(renderEntries(shown));
   console.log(pc.dim(`\n${summarize(shown)}`));
   return 0;
