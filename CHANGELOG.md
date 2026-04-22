@@ -69,3 +69,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on ci caching
 - double-check error messages behavior
 - double-check docs example behavior
+- follow up on config defaults
