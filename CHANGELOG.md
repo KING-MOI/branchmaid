@@ -122,3 +122,4 @@ All notable changes to this project are documented here. The format follows
 - double-check link checker behavior
 - double-check error messages behavior
 - follow up on docs example
+- double-check type narrowing behavior
