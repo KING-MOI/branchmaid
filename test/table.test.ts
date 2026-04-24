@@ -1,6 +1,6 @@
 import { createColors } from "picocolors";
 import { describe, expect, it } from "vitest";
-import { table } from "../src/table.js";
+import { table, truncate } from "../src/table.js";
 
 const pc = createColors(true);
 
@@ -24,5 +24,25 @@ describe("table", () => {
 
   it("returns empty string for no rows", () => {
     expect(table([])).toBe("");
+  });
+});
+
+describe("truncate", () => {
+  it("leaves short text alone", () => {
+    expect(truncate("abc", 5)).toBe("abc");
+  });
+
+  it("cuts long text with an ellipsis", () => {
+    expect(truncate("abcdef", 4)).toBe("abc…");
+  });
+
+  it("returns nothing when there is no room", () => {
+    expect(truncate("abc", 0)).toBe("");
+  });
+});
+
+describe("table maxWidth", () => {
+  it("shortens the final column", () => {
+    expect(table([["ab", "a long subject"]], 10)).toBe("ab  a lon…");
   });
 });
