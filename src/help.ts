@@ -31,6 +31,7 @@ Options
   --no-backup           do not create backup tags when deleting
   --as <name>           with restore: recreate the branch under a different name
   --prune <dur>         with backups: drop backup tags older than <dur>
+  --no-color            disable colors (NO_COLOR is honoured too)
   -h, --help            show this help
   -v, --version         print the version
 `;

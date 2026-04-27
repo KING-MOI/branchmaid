@@ -41,6 +41,7 @@ export const OPTIONS = {
   fetch: { type: "boolean", short: "f" },
   remote: { type: "boolean" },
   as: { type: "string" },
+  "no-color": { type: "boolean" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
