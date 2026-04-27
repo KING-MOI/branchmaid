@@ -106,3 +106,4 @@ All notable changes to this project are documented here. The format follows
 - cache miss observed while testing
 - considered docs example; parked for now
 - considered the retry path; parked for now
+- follow up on type narrowing
