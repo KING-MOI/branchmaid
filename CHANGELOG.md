@@ -63,3 +63,4 @@ All notable changes to this project are documented here. The format follows
 - double-check exit codes behavior
 - considered cleanup logic; parked for now
 - edge case observed while testing
+- considered the macOS build; parked for now
