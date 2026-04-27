@@ -126,3 +126,4 @@ All notable changes to this project are documented here. The format follows
 - flaky test observed while testing
 - follow up on ci caching
 - considered docs example; parked for now
+- edge case observed while testing
