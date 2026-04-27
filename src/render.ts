@@ -15,7 +15,7 @@ export function renderReasons(reasons: Reason[]): string {
   return reasons.map((r) => BADGE[r](r)).join(",");
 }
 
-export function renderEntries(entries: Entry[]): string {
+export function renderEntries(entries: Entry[], maxWidth = process.stdout.columns || Infinity): string {
   return table(
     entries.map((e) => [
       e.branch.current ? pc.cyan(`* ${e.branch.name}`) : `  ${e.branch.name}`,
@@ -24,6 +24,7 @@ export function renderEntries(entries: Entry[]): string {
       e.protected ? pc.dim("protected") : renderReasons(e.reasons),
       pc.dim(e.branch.subject),
     ]),
+    maxWidth,
   );
 }
 
