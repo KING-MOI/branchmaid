@@ -218,3 +218,9 @@ describe("main empty results", () => {
     expect((await run(["--gone"], makeRepo())).out).toBe("no branches match");
   });
 });
+
+describe("main --no-color", () => {
+  it("is accepted", async () => {
+    expect((await run(["--no-color"], makeRepo())).code).toBe(0);
+  });
+});
