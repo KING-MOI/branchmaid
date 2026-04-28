@@ -51,3 +51,4 @@ All notable changes to this project are documented here. The format follows
 - Branches sitting exactly on the base tip are not swept.
 - follow up on type narrowing
 - follow up on release checklist
+- flaky test observed while testing
