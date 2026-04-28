@@ -30,3 +30,13 @@ export function isSquashMerged(branch: string, base: string, cwd?: string): bool
   const probe = git(["commit-tree", tree, "-p", mergeBase, "-m", "branchmaid probe"], cwd);
   return git(["cherry", base, probe], cwd).startsWith("-");
 }
+
+export function aheadBehind(base: string, cwd?: string): Map<string, { ahead: number; behind: number }> {
+  const out = git(["for-each-ref", `--format=%(refname:short) %(ahead-behind:${base})`, "refs/heads"], cwd);
+  const map = new Map<string, { ahead: number; behind: number }>();
+  for (const line of out ? out.split("\n") : []) {
+    const [name, ahead, behind] = line.split(" ");
+    map.set(name, { ahead: Number(ahead), behind: Number(behind) });
+  }
+  return map;
+}
