@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { defaultBase, isSquashMerged, mergedInto } from "../src/merged.js";
+import { aheadBehind, defaultBase, isSquashMerged, mergedInto } from "../src/merged.js";
 import { commit, makeRepo, sh } from "./helpers.js";
 
 describe("mergedInto", () => {
@@ -65,5 +65,19 @@ describe("isSquashMerged", () => {
     commit(repo, "add c");
     sh(repo, ["checkout", "-q", "main"]);
     expect(isSquashMerged("open", "main", repo)).toBe(false);
+  });
+});
+
+describe("aheadBehind", () => {
+  it("counts commits relative to base", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "topic"]);
+    commit(repo, "t1");
+    commit(repo, "t2");
+    sh(repo, ["checkout", "-q", "main"]);
+    commit(repo, "m1");
+    const map = aheadBehind("main", repo);
+    expect(map.get("topic")).toEqual({ ahead: 2, behind: 1 });
+    expect(map.get("main")).toEqual({ ahead: 0, behind: 0 });
   });
 });
