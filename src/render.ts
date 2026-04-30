@@ -20,6 +20,7 @@ export function renderEntries(entries: Entry[], maxWidth = process.stdout.column
     entries.map((e) => [
       e.branch.current ? pc.cyan(`* ${e.branch.name}`) : `  ${e.branch.name}`,
       pc.dim(formatAge(e.age)),
+      e.protected ? "" : `${pc.green(`+${e.ahead}`)} ${pc.red(`-${e.behind}`)}`,
       e.branch.author,
       e.protected ? pc.dim("protected") : renderReasons(e.reasons),
       pc.dim(e.branch.subject),
