@@ -5,7 +5,7 @@ import { selectSweep } from "../src/sweep.js";
 import { branch } from "./fixtures.js";
 
 function entry(name: string, reasons: Reason[], isProtected = false): Entry {
-  return { branch: branch(name), reasons, protected: isProtected, age: 0 };
+  return { branch: branch(name), reasons, protected: isProtected, age: 0, ahead: 0, behind: 0 };
 }
 
 const entries = [

@@ -9,6 +9,8 @@ const entry = (name: string, reasons: Reason[], isProtected = false): Entry => (
   reasons,
   protected: isProtected,
   age: 0,
+  ahead: 0,
+  behind: 0,
 });
 
 describe("summarize", () => {
