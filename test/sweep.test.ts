@@ -5,7 +5,7 @@ import { selectSweep } from "../src/sweep.js";
 import { branch } from "./fixtures.js";
 
 function entry(name: string, reasons: Reason[], isProtected = false): Entry {
-  return { branch: branch(name), reasons, protected: isProtected, age: 0, ahead: 0, behind: 0 };
+  return { branch: branch(name), reasons, protected: isProtected, age: 0, ahead: 0, behind: 1 };
 }
 
 const entries = [
@@ -36,5 +36,12 @@ describe("selectSweep", () => {
     expect(
       names(selectSweep(entries, { olderThan: "30d", merged: true, gone: true, stale: true })),
     ).not.toContain("main");
+  });
+});
+
+describe("selectSweep at base", () => {
+  it("skips merged branches that sit exactly on base", () => {
+    const fresh = { ...entry("fresh", ["merged"]), behind: 0 };
+    expect(selectSweep([fresh], { olderThan: "30d", merged: true, gone: true, stale: false })).toEqual([]);
   });
 });

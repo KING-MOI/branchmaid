@@ -6,6 +6,7 @@ import { makeRepo, sh } from "./helpers.js";
 function swept(): string {
   const r = makeRepo();
   sh(r, ["branch", "feature/done"]);
+  sh(r, ["commit", "-q", "--allow-empty", "-m", "main moves on"]);
   return r;
 }
 

@@ -12,6 +12,7 @@ function repo(): string {
   sh(r, ["checkout", "-q", "-b", "wip"]);
   commit(r, "wip");
   sh(r, ["checkout", "-q", "main"]);
+  commit(r, "main moves on");
   return r;
 }
 
@@ -106,6 +107,7 @@ describe("sweep --remote", () => {
     sh(r, ["push", "-q", "-u", "origin", "done"]);
     sh(r, ["checkout", "-q", "main"]);
     sh(r, ["merge", "-q", "--ff-only", "done"]);
+    commit(r, "main moves on");
     return { r, remote };
   }
 
@@ -123,5 +125,22 @@ describe("sweep --remote", () => {
     const { r, remote } = pushed();
     await run(["sweep", "-y"], r);
     expect(remoteHas(remote, "done")).toBe(true);
+  });
+});
+
+describe("sweep fresh branches", () => {
+  it("keeps a branch that was just created at the base tip", async () => {
+    const r = makeRepo();
+    sh(r, ["branch", "just-started"]);
+    await run(["sweep", "-y"], r);
+    expect(names(r)).toContain("just-started");
+  });
+
+  it("sweeps it once base has moved past it", async () => {
+    const r = makeRepo();
+    sh(r, ["branch", "ff-merged"]);
+    commit(r, "next");
+    await run(["sweep", "-y"], r);
+    expect(names(r)).not.toContain("ff-merged");
   });
 });

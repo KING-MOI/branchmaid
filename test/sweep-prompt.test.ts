@@ -10,6 +10,7 @@ vi.mock("@clack/prompts", async (orig) => ({ ...(await orig<object>()), ...promp
 function repo(): string {
   const r = makeRepo();
   sh(r, ["branch", "merged-one"]);
+  sh(r, ["commit", "-q", "--allow-empty", "-m", "main moves on"]);
   return r;
 }
 
@@ -57,7 +58,7 @@ describe("sweep --interactive", () => {
     await run(["sweep", "-i"], r);
     const opts = prompts.multiselect.mock.calls[0][0];
     expect(opts.options.map((o: { value: string }) => o.value).sort()).toEqual(["merged-one", "other"]);
-    expect(opts.initialValues.sort()).toEqual(["merged-one", "other"]);
+    expect(opts.initialValues).toEqual(["merged-one"]);
   });
 
   it("deletes only what was picked", async () => {
