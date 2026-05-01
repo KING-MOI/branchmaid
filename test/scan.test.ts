@@ -43,3 +43,13 @@ describe("scan", () => {
     expect(squashy?.reasons).toEqual(["squashed"]);
   });
 });
+
+describe("scan ahead/behind", () => {
+  it("fills in counts per branch", () => {
+    const repo = setup();
+    const ancient = scan({ base: "main", staleAfter: DAY, protected: [] }, repo).find(
+      (e) => e.branch.name === "ancient",
+    );
+    expect(ancient).toMatchObject({ ahead: 1, behind: 0 });
+  });
+});
