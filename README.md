@@ -33,6 +33,42 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 ```
 
+## Configuration
+
+branchmaid reads its settings from the first of these it finds at the root of
+your repository:
+
+1. `.branchmaidrc` (JSON)
+2. `.branchmaidrc.json`
+3. the `branchmaid` key in `package.json`
+
+```json
+{
+  "base": "main",
+  "protected": ["main", "master", "develop", "release/*"],
+  "squash": false,
+  "sweep": {
+    "olderThan": "30d",
+    "merged": true,
+    "gone": true,
+    "stale": false
+  }
+}
+```
+
+| key               | default                         | meaning                                            |
+| ----------------- | ------------------------------- | -------------------------------------------------- |
+| `base`            | origin HEAD, `main` or `master` | branch that "merged" is measured against           |
+| `protected`       | `main`, `master`, `develop`     | glob patterns that are never listed for deletion   |
+| `squash`          | `false`                         | also detect squash-merged branches                 |
+| `sweep.olderThan` | `30d`                           | a branch is stale once its last commit is this old |
+| `sweep.merged`    | `true`                          | sweep branches merged into base                    |
+| `sweep.gone`      | `true`                          | sweep branches whose upstream was deleted          |
+| `sweep.stale`     | `false`                         | sweep stale branches even when they are not merged |
+
+Run `branchmaid init` to write the defaults, and `branchmaid config` to see
+what is in effect.
+
 ## License
 
 MIT © 2026 Aditya Verma
