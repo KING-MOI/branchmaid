@@ -33,6 +33,22 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 ```
 
+## How branches are classified
+
+| label      | meaning                                                                    |
+| ---------- | -------------------------------------------------------------------------- |
+| `merged`   | every commit on the branch is reachable from base                          |
+| `squashed` | the branch's changes landed on base as a single squash commit (`--squash`) |
+| `gone`     | the branch tracked a remote branch that no longer exists                   |
+| `stale`    | the last commit is older than `--older-than`                               |
+
+The current branch, the base branch, branches checked out in another worktree
+and anything matching `protected` are never deleted.
+
+A merged branch that points at exactly the same commit as base is left alone
+by `sweep`: it was most likely created a moment ago. It gets swept once base
+moves on.
+
 ## Configuration
 
 branchmaid reads its settings from the first of these it finds at the root of
