@@ -33,6 +33,21 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 ```
 
+## Backups
+
+Before a branch is deleted, branchmaid tags its tip as
+`branchmaid/backup/<timestamp>/<branch>`. Tags are cheap and keep the commits
+alive, so a deleted branch can always be brought back:
+
+```sh
+branchmaid backups                    # list backups, newest first
+branchmaid restore feat/x             # recreate feat/x from its newest backup
+branchmaid restore feat/x --as feat/y # under a different name
+branchmaid backups --prune 90d        # drop backups older than 90 days
+```
+
+Backup tags are local. They are not pushed unless you push tags yourself.
+
 ## How branches are classified
 
 | label      | meaning                                                                    |
