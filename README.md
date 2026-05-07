@@ -10,6 +10,11 @@ branchmaid lists your local branches by age, works out which ones are merged
 or whose remote is gone, and deletes them for you. Every deletion leaves a
 backup tag behind, so nothing is ever more than one command away from coming back.
 
+## Requirements
+
+- Node.js 20.12 or newer
+- git 2.41 or newer
+
 ## Install
 
 ```sh
