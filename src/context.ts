@@ -1,6 +1,6 @@
 import type { Config } from "./config.js";
 import { parseDuration } from "./duration.js";
-import { git } from "./git.js";
+import { assertGitVersion, git } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { type Entry, scan } from "./scan.js";
 
@@ -32,6 +32,7 @@ export interface Context {
 }
 
 export function scanRepo(ctx: Context): Entry[] {
+  assertGitVersion();
   if (ctx.flags.fetch) git(["fetch", "--all", "--prune", "--quiet"], ctx.cwd);
   const entries = scan(
     {
