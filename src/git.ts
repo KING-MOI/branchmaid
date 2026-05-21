@@ -11,6 +11,7 @@ export class GitError extends Error {
 }
 
 export function git(args: string[], cwd = process.cwd()): string {
+  if (process.env.BRANCHMAID_DEBUG) console.error(`$ git ${args.join(" ")}`);
   try {
     return execFileSync("git", args, {
       cwd,
