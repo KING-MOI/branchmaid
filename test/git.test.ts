@@ -1,6 +1,6 @@
 import { mkdirSync, realpathSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertGitVersion, git, GitError, parseGitVersion, repoRoot } from "../src/git.js";
 import { makeRepo } from "./helpers.js";
 
@@ -40,5 +40,27 @@ describe("git version", () => {
     expect(() => assertGitVersion("git version 2.41.0")).not.toThrow();
     expect(() => assertGitVersion("git version 3.0.0")).not.toThrow();
     expect(() => assertGitVersion("weird build")).not.toThrow();
+  });
+});
+
+describe("BRANCHMAID_DEBUG", () => {
+  afterEach(() => {
+    delete process.env.BRANCHMAID_DEBUG;
+    vi.restoreAllMocks();
+  });
+
+  it("prints each git command to stderr", () => {
+    const repo = makeRepo();
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    process.env.BRANCHMAID_DEBUG = "1";
+    git(["rev-parse", "HEAD"], repo);
+    expect(err).toHaveBeenCalledWith("$ git rev-parse HEAD");
+  });
+
+  it("is silent by default", () => {
+    const repo = makeRepo();
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    git(["rev-parse", "HEAD"], repo);
+    expect(err).not.toHaveBeenCalled();
   });
 });
