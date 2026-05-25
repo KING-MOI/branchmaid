@@ -38,6 +38,14 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 ```
 
+## Troubleshooting
+
+Set `BRANCHMAID_DEBUG=1` to print every git command branchmaid runs:
+
+```sh
+BRANCHMAID_DEBUG=1 branchmaid sweep -n
+```
+
 ## Backups
 
 Before a branch is deleted, branchmaid tags its tip as
