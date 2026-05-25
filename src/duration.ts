@@ -24,3 +24,13 @@ export function formatAge(ms: number): string {
   if (days < 365) return `${Math.floor(days / 30)}mo`;
   return `${Math.floor(days / 365)}y`;
 }
+
+export function parseCutoff(input: string, now = Date.now()): number {
+  if (/^\d{4}-\d{2}-\d{2}/.test(input)) {
+    const at = Date.parse(input);
+    if (Number.isNaN(at)) throw new Error(`invalid date: ${input}`);
+    if (at > now) throw new Error(`date is in the future: ${input}`);
+    return now - at;
+  }
+  return parseDuration(input);
+}
