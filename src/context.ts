@@ -1,5 +1,5 @@
 import type { Config } from "./config.js";
-import { parseDuration } from "./duration.js";
+import { parseCutoff } from "./duration.js";
 import { assertGitVersion, git } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { type Entry, scan } from "./scan.js";
@@ -37,7 +37,7 @@ export function scanRepo(ctx: Context): Entry[] {
   const entries = scan(
     {
       base: ctx.flags.base ?? ctx.config.base ?? defaultBase(ctx.cwd),
-      staleAfter: parseDuration(ctx.flags["older-than"] ?? ctx.config.sweep.olderThan),
+      staleAfter: parseCutoff(ctx.flags["older-than"] ?? ctx.config.sweep.olderThan),
       protected: ctx.config.protected,
       squash: ctx.flags.squash ?? ctx.config.squash,
     },

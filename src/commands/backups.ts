@@ -1,13 +1,13 @@
 import pc from "picocolors";
 import { backupsOlderThan, dropBackup, listBackups } from "../backup.js";
 import type { Context } from "../context.js";
-import { formatAge, parseDuration } from "../duration.js";
+import { formatAge, parseCutoff } from "../duration.js";
 import { table } from "../table.js";
 
 export function backups(ctx: Context): number {
   const all = listBackups(ctx.cwd);
   if (ctx.flags.prune) {
-    const old = backupsOlderThan(all, parseDuration(ctx.flags.prune));
+    const old = backupsOlderThan(all, parseCutoff(ctx.flags.prune));
     for (const b of old) {
       if (!ctx.flags.dryRun) dropBackup(b, ctx.cwd);
       console.log(`${ctx.flags.dryRun ? "would drop" : pc.yellow("dropped")} ${b.tag}`);
