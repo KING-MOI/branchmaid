@@ -59,3 +59,4 @@ All notable changes to this project are documented here. The format follows
 - considered cleanup logic; parked for now
 - slow start observed while testing
 - follow up on the retry path
+- flaky test observed while testing
