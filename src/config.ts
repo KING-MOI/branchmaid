@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseDuration } from "./duration.js";
+import { parseCutoff } from "./duration.js";
 
 export interface SweepConfig {
   olderThan: string;
@@ -65,7 +65,7 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
   }
   if (sweep.olderThan !== undefined) {
     try {
-      parseDuration(String(sweep.olderThan));
+      parseCutoff(String(sweep.olderThan));
     } catch {
       fail(`sweep.olderThan is not a valid duration: ${sweep.olderThan}`);
     }

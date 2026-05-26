@@ -77,3 +77,9 @@ describe("validateConfig squash", () => {
     expect(() => validateConfig({ squash: "yes" }, "rc")).toThrow(/squash must be a boolean/);
   });
 });
+
+describe("validateConfig dates", () => {
+  it("accepts an iso date for sweep.olderThan", () => {
+    expect(() => validateConfig({ sweep: { olderThan: "2020-01-01" } }, "rc")).not.toThrow();
+  });
+});
