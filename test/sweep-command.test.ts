@@ -144,3 +144,11 @@ describe("sweep fresh branches", () => {
     expect(names(r)).not.toContain("ff-merged");
   });
 });
+
+describe("sweep --protect", () => {
+  it("keeps branches matching the extra patterns", async () => {
+    const r = repo();
+    await run(["sweep", "-y", "--protect", "merged-*"], r);
+    expect(names(r)).toContain("merged-one");
+  });
+});
