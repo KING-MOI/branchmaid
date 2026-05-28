@@ -42,6 +42,7 @@ export const OPTIONS = {
   remote: { type: "boolean" },
   as: { type: "string" },
   "no-color": { type: "boolean" },
+  protect: { type: "string", multiple: true },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;

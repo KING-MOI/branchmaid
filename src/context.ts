@@ -28,6 +28,7 @@ export interface Context {
     fetch?: boolean;
     remote?: boolean;
     as?: string;
+    protect?: string[];
   };
 }
 
@@ -38,7 +39,7 @@ export function scanRepo(ctx: Context): Entry[] {
     {
       base: ctx.flags.base ?? ctx.config.base ?? defaultBase(ctx.cwd),
       staleAfter: parseCutoff(ctx.flags["older-than"] ?? ctx.config.sweep.olderThan),
-      protected: ctx.config.protected,
+      protected: [...ctx.config.protected, ...(ctx.flags.protect ?? [])],
       squash: ctx.flags.squash ?? ctx.config.squash,
     },
     ctx.cwd,
