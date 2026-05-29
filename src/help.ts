@@ -20,6 +20,7 @@ Options
   --gone                only show branches whose upstream was deleted
   --stale               only show branches older than the threshold
   --mine                only show branches whose last commit is yours
+  --author <text>       only show branches whose last author name or email contains text
   --squash              also detect squash-merged branches (slower)
   --sort <key>          sort by age (default), name or author
   --limit <n>           show at most n branches

@@ -29,6 +29,7 @@ export interface Context {
     remote?: boolean;
     as?: string;
     protect?: string[];
+    author?: string;
   };
 }
 
@@ -44,7 +45,14 @@ export function scanRepo(ctx: Context): Entry[] {
     },
     ctx.cwd,
   );
-  if (!ctx.flags.mine) return entries;
-  const email = git(["config", "user.email"], ctx.cwd);
-  return entries.filter((e) => e.branch.email === email);
+  let result = entries;
+  if (ctx.flags.mine) {
+    const email = git(["config", "user.email"], ctx.cwd);
+    result = result.filter((e) => e.branch.email === email);
+  }
+  if (ctx.flags.author) {
+    const needle = ctx.flags.author.toLowerCase();
+    result = result.filter((e) => `${e.branch.author} ${e.branch.email}`.toLowerCase().includes(needle));
+  }
+  return result;
 }

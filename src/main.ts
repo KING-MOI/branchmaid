@@ -43,6 +43,7 @@ export const OPTIONS = {
   as: { type: "string" },
   "no-color": { type: "boolean" },
   protect: { type: "string", multiple: true },
+  author: { type: "string" },
   help: { type: "boolean", short: "h" },
   version: { type: "boolean", short: "v" },
 } as const;
