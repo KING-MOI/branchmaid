@@ -35,6 +35,11 @@ export interface Context {
 
 export function scanRepo(ctx: Context): Entry[] {
   assertGitVersion();
+  try {
+    git(["rev-parse", "--verify", "--quiet", "HEAD"], ctx.cwd);
+  } catch {
+    throw new Error("this repository has no commits yet");
+  }
   if (ctx.flags.fetch) git(["fetch", "--all", "--prune", "--quiet"], ctx.cwd);
   const entries = scan(
     {

@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -243,5 +243,15 @@ describe("main --author", () => {
     sh(repo, ["checkout", "-q", "main"]);
     expect((await run(["--author", "ALICE", "--names"], repo)).out).toBe("alice-work");
     expect((await run(["--author", "x.dev", "--names"], repo)).out).toBe("alice-work");
+  });
+});
+
+describe("main empty repository", () => {
+  it("explains that there are no commits yet", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "branchmaid-empty-"));
+    sh(dir, ["init", "-q", "-b", "main"]);
+    const { code, err } = await run([], dir);
+    expect(code).toBe(1);
+    expect(err).toContain("no commits yet");
   });
 });
