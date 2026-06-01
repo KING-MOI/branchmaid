@@ -224,3 +224,24 @@ describe("main --no-color", () => {
     expect((await run(["--no-color"], makeRepo())).code).toBe(0);
   });
 });
+
+describe("main --author", () => {
+  it("matches name or email case-insensitively", async () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "-b", "alice-work"]);
+    sh(repo, [
+      "-c",
+      "user.name=Alice",
+      "-c",
+      "user.email=alice@x.dev",
+      "commit",
+      "-q",
+      "--allow-empty",
+      "-m",
+      "a",
+    ]);
+    sh(repo, ["checkout", "-q", "main"]);
+    expect((await run(["--author", "ALICE", "--names"], repo)).out).toBe("alice-work");
+    expect((await run(["--author", "x.dev", "--names"], repo)).out).toBe("alice-work");
+  });
+});
