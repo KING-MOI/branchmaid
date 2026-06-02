@@ -25,11 +25,16 @@ export async function sweep(ctx: Context): Promise<number> {
     }
     targets = picked;
   }
+  const json = ctx.flags.json;
   if (targets.length === 0) {
-    console.log("nothing to sweep");
+    console.log(json ? "[]" : "nothing to sweep");
     return 0;
   }
-  console.log(renderEntries(targets));
+  if (json && ctx.flags.dryRun) {
+    console.log(JSON.stringify(targets, null, 2));
+    return 0;
+  }
+  if (!json) console.log(renderEntries(targets));
   if (ctx.flags.dryRun) {
     console.log(pc.dim(`\ndry run: ${targets.length} branch(es) would be deleted`));
     return 0;
@@ -45,20 +50,22 @@ export async function sweep(ctx: Context): Promise<number> {
       return 0;
     }
   }
-  let failed = 0;
-  for (const e of targets) {
-    const res = deleteBranch(e.branch, {
-      cwd: ctx.cwd,
-      backup: !ctx.flags.noBackup,
-      remote: ctx.flags.remote,
-    });
+  const results = targets.map((e) =>
+    deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup, remote: ctx.flags.remote }),
+  );
+  const failed = results.filter((r) => !r.deleted).length;
+  if (json) {
+    console.log(JSON.stringify(results, null, 2));
+    return failed ? 1 : 0;
+  }
+  for (const [i, res] of results.entries()) {
+    const e = targets[i];
     if (res.deleted) {
       console.log(`${pc.green("deleted")} ${res.name}${res.tag ? pc.dim(` -> ${res.tag}`) : ""}`);
       if (res.remoteDeleted) console.log(`${pc.green("deleted")} ${e.branch.upstream}`);
       if (res.remoteDeleted === false)
         console.error(`${pc.yellow("kept")} ${e.branch.upstream}: ${res.error}`);
     } else {
-      failed++;
       console.error(`${pc.red("failed")} ${res.name}: ${res.error}`);
     }
   }
