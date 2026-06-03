@@ -87,3 +87,4 @@ All notable changes to this project are documented here. The format follows
 - flaky test observed while testing
 - double-check the macOS build behavior
 - edge case observed while testing
+- flaky test observed while testing
