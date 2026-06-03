@@ -152,3 +152,22 @@ describe("sweep --protect", () => {
     expect(names(r)).toContain("merged-one");
   });
 });
+
+describe("sweep --json", () => {
+  it("prints planned targets on dry run", async () => {
+    const { out } = await run(["sweep", "-n", "--json"], repo());
+    expect(JSON.parse(out).map((e: { branch: { name: string } }) => e.branch.name)).toEqual(["merged-one"]);
+  });
+
+  it("prints deletion results", async () => {
+    const r = repo();
+    const { out } = await run(["sweep", "-y", "--json"], r);
+    const [res] = JSON.parse(out);
+    expect(res).toMatchObject({ name: "merged-one", deleted: true });
+    expect(res.tag).toMatch(/^branchmaid\/backup\//);
+  });
+
+  it("prints an empty array when there is nothing to do", async () => {
+    expect((await run(["sweep", "-y", "--json"], makeRepo())).out).toBe("[]");
+  });
+});
