@@ -83,3 +83,4 @@ All notable changes to this project are documented here. The format follows
 - considered type narrowing; parked for now
 - double-check cleanup logic behavior
 - considered release checklist; parked for now
+- follow up on ci caching
