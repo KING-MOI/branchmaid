@@ -76,3 +76,4 @@ All notable changes to this project are documented here. The format follows
 - slow start observed while testing
 - considered type narrowing; parked for now
 - follow up on type narrowing
+- follow up on the retry path
