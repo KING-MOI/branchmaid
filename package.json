@@ -38,7 +38,8 @@
     "url": "https://github.com/adityaverma/branchmaid/issues"
   },
   "files": [
-    "dist"
+    "dist",
+    "schema.json"
   ],
   "keywords": [
     "git",

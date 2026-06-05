@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "branchmaid configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "base": {
+      "type": "string",
+      "description": "Branch that merged status is measured against."
+    },
+    "protected": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Glob patterns for branches that are never deleted.",
+      "default": ["main", "master", "develop"]
+    },
+    "squash": {
+      "type": "boolean",
+      "description": "Detect squash-merged branches.",
+      "default": false
+    },
+    "sweep": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "olderThan": {
+          "type": "string",
+          "description": "Staleness threshold such as 30d, 2w, 3mo or an ISO date.",
+          "default": "30d"
+        },
+        "merged": { "type": "boolean", "default": true },
+        "gone": { "type": "boolean", "default": true },
+        "stale": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}
