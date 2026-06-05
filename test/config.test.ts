@@ -83,3 +83,19 @@ describe("validateConfig dates", () => {
     expect(() => validateConfig({ sweep: { olderThan: "2020-01-01" } }, "rc")).not.toThrow();
   });
 });
+
+describe("validateConfig unknown keys", () => {
+  it("rejects typos at the top level", () => {
+    expect(() => validateConfig({ protect: ["main"] }, "rc")).toThrow(/unknown option "protect"/);
+  });
+
+  it("rejects typos inside sweep", () => {
+    expect(() => validateConfig({ sweep: { olderthan: "1d" } }, "rc")).toThrow(
+      /unknown option "sweep.olderthan"/,
+    );
+  });
+
+  it("allows a $schema reference", () => {
+    expect(() => validateConfig({ $schema: "./node_modules/branchmaid/schema.json" }, "rc")).not.toThrow();
+  });
+});

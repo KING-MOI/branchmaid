@@ -50,6 +50,9 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
     throw new Error(`${source}: ${msg}`);
   };
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) fail("config must be an object");
+  for (const key of Object.keys(raw)) {
+    if (key !== "$schema" && !(key in DEFAULTS) && key !== "base") fail(`unknown option "${key}"`);
+  }
   if (raw.base !== undefined && typeof raw.base !== "string") fail("base must be a string");
   if (
     raw.protected !== undefined &&
@@ -60,6 +63,9 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
   if (raw.squash !== undefined && typeof raw.squash !== "boolean") fail("squash must be a boolean");
   const sweep = raw.sweep ?? {};
   if (typeof sweep !== "object") fail("sweep must be an object");
+  for (const key of Object.keys(sweep)) {
+    if (!(key in DEFAULTS.sweep)) fail(`unknown option "sweep.${key}"`);
+  }
   for (const key of ["merged", "gone", "stale"]) {
     if (sweep[key] !== undefined && typeof sweep[key] !== "boolean") fail(`sweep.${key} must be a boolean`);
   }
