@@ -72,3 +72,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on config defaults
 - considered ci caching; parked for now
 - considered config defaults; parked for now
+- follow up on type narrowing
