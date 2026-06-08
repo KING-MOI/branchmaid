@@ -82,7 +82,9 @@ export function validateConfig(raw: any, source: string): Partial<Config> {
 export function resolveConfig(dir = process.cwd()): { config: Config; source?: string } {
   const found = findRaw(dir);
   if (!found) return { config: DEFAULTS };
-  const raw = validateConfig(found.raw, found.source);
+  const { $schema: _schema, ...raw } = validateConfig(found.raw, found.source) as Partial<Config> & {
+    $schema?: string;
+  };
   return {
     config: { ...DEFAULTS, ...raw, sweep: { ...DEFAULTS.sweep, ...raw.sweep } },
     source: found.source,

@@ -99,3 +99,11 @@ describe("validateConfig unknown keys", () => {
     expect(() => validateConfig({ $schema: "./node_modules/branchmaid/schema.json" }, "rc")).not.toThrow();
   });
 });
+
+describe("loadConfig $schema", () => {
+  it("does not leak $schema into the config", () => {
+    const cfg = loadConfig(dir({ ".branchmaidrc": { $schema: "x", base: "dev" } }));
+    expect(cfg).not.toHaveProperty("$schema");
+    expect(cfg.base).toBe("dev");
+  });
+});
