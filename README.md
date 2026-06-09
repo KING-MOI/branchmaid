@@ -110,6 +110,15 @@ your repository:
 | `sweep.gone`      | `true`                          | sweep branches whose upstream was deleted          |
 | `sweep.stale`     | `false`                         | sweep stale branches even when they are not merged |
 
+Point your editor at the bundled schema for completion and validation:
+
+```json
+{ "$schema": "./node_modules/branchmaid/schema.json" }
+```
+
+Unknown keys are rejected, so a typo like `olderthan` fails loudly instead of
+being ignored.
+
 Run `branchmaid init` to write the defaults, and `branchmaid config` to see
 what is in effect.
 
