@@ -11,7 +11,8 @@ export function init(ctx: Context): number {
     console.error(`${file} already exists`);
     return 1;
   }
-  writeFileSync(file, `${JSON.stringify(DEFAULTS, null, 2)}\n`);
+  const body = { $schema: "./node_modules/branchmaid/schema.json", ...DEFAULTS };
+  writeFileSync(file, `${JSON.stringify(body, null, 2)}\n`);
   console.log(`${pc.green("created")} ${file}`);
   return 0;
 }

@@ -10,7 +10,9 @@ describe("init", () => {
     const r = makeRepo();
     const { code } = await run(["init"], r);
     expect(code).toBe(0);
-    expect(JSON.parse(readFileSync(join(r, ".branchmaidrc"), "utf8"))).toEqual(DEFAULTS);
+    const written = JSON.parse(readFileSync(join(r, ".branchmaidrc"), "utf8"));
+    expect(written).toEqual({ $schema: "./node_modules/branchmaid/schema.json", ...DEFAULTS });
+    expect((await run(["config"], r)).out).toBe(JSON.stringify(DEFAULTS, null, 2));
   });
 
   it("refuses to overwrite", async () => {
