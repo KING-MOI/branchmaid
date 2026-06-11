@@ -37,3 +37,31 @@ Options
   -h, --help            show this help
   -v, --version         print the version
 `;
+
+export const COMMAND_HELP: Record<string, string> = {
+  list: `Usage: branchmaid list [--merged] [--gone] [--stale] [--mine] [--author <text>]
+                       [--sort age|name|author] [--limit <n>] [--names | --json]
+
+Show local branches, oldest first, with their age, commits ahead and behind
+base, last author and why they might be safe to delete.`,
+  sweep: `Usage: branchmaid sweep [-n] [-y] [-i] [--remote] [--no-backup] [--json]
+                        [--merged] [--gone] [--stale]
+
+Delete branches that are merged into base or whose upstream is gone. Each
+branch is tagged under branchmaid/backup/ first. Pass --merged, --gone or
+--stale to choose exactly which kinds are swept for this run.`,
+  backups: `Usage: branchmaid backups [--prune <dur|date>] [-n] [--json]
+
+List backup tags, newest first. With --prune, drop the ones older than the
+given age.`,
+  restore: `Usage: branchmaid restore [<branch> | <tag>] [--as <name>]
+
+Recreate a deleted branch from its newest backup, or from the exact tag given.
+Without an argument, pick a backup from a list.`,
+  init: `Usage: branchmaid init
+
+Write a .branchmaidrc with the default settings at the repository root.`,
+  config: `Usage: branchmaid config
+
+Print the configuration in effect and the file it was read from.`,
+};

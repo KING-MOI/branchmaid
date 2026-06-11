@@ -7,7 +7,7 @@ import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
 import { sweep } from "./commands/sweep.js";
 import { loadConfig } from "./config.js";
-import { HELP } from "./help.js";
+import { COMMAND_HELP, HELP } from "./help.js";
 import type { Context } from "./context.js";
 import { repoRoot } from "./git.js";
 import { version } from "./version.js";
@@ -56,7 +56,8 @@ async function run(argv: string[], cwd: string): Promise<number> {
     return 0;
   }
   if (values.help || name === "help") {
-    console.log(HELP);
+    const topic = name === "help" ? positionals[1] : positionals[0];
+    console.log((topic && COMMAND_HELP[topic]) || HELP);
     return 0;
   }
   const command = COMMANDS[name];
