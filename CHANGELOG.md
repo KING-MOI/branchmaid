@@ -52,3 +52,4 @@ All notable changes to this project are documented here. The format follows
 - follow up on type narrowing
 - follow up on release checklist
 - flaky test observed while testing
+- double-check the macOS build behavior
