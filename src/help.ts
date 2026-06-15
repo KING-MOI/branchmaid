@@ -10,6 +10,7 @@ Commands
   restore <branch|tag>  recreate a deleted branch from its latest backup or a given tag
   init                  write a .branchmaidrc with the defaults
   config                print the effective config and where it came from
+  completion <shell>    print a completion script for bash, zsh or fish
 
 Options
   --base <name>         branch to compare against (default: origin HEAD, main or master)
@@ -61,6 +62,11 @@ Without an argument, pick a backup from a list.`,
   init: `Usage: branchmaid init
 
 Write a .branchmaidrc with the default settings at the repository root.`,
+  completion: `Usage: branchmaid completion [bash|zsh|fish]
+
+Print a shell completion script. For example:
+  branchmaid completion bash >> ~/.bashrc
+  branchmaid completion fish > ~/.config/fish/completions/branchmaid.fish`,
   config: `Usage: branchmaid config
 
 Print the configuration in effect and the file it was read from.`,
