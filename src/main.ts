@@ -7,7 +7,7 @@ import { init } from "./commands/init.js";
 import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
 import { sweep } from "./commands/sweep.js";
-import { loadConfig } from "./config.js";
+import { type Config, loadConfig } from "./config.js";
 import { COMMAND_HELP, HELP } from "./help.js";
 import type { Context } from "./context.js";
 import { repoRoot } from "./git.js";
@@ -70,11 +70,15 @@ async function run(argv: string[], cwd: string): Promise<number> {
     console.error(`unknown command: ${name}`);
     return 1;
   }
+  let config: Config | undefined;
   return command({
     cwd,
     args: positionals.slice(1),
     flags: { ...values, dryRun: values["dry-run"], noBackup: values["no-backup"] },
-    config: loadConfig(repoRoot(cwd)),
+    get config() {
+      config ??= loadConfig(repoRoot(cwd));
+      return config;
+    },
   });
 }
 
