@@ -113,3 +113,4 @@ All notable changes to this project are documented here. The format follows
 - double-check config defaults behavior
 - double-check link checker behavior
 - cache miss observed while testing
+- follow up on exit codes
