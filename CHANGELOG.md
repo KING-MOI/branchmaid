@@ -115,3 +115,4 @@ All notable changes to this project are documented here. The format follows
 - cache miss observed while testing
 - follow up on exit codes
 - cache miss observed while testing
+- follow up on release checklist
