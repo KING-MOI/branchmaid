@@ -1,6 +1,6 @@
 import type { Config } from "./config.js";
 import { parseCutoff } from "./duration.js";
-import { assertGitVersion, git } from "./git.js";
+import { assertGitVersion, git, repoRoot } from "./git.js";
 import { defaultBase } from "./merged.js";
 import { type Entry, scan } from "./scan.js";
 
@@ -35,6 +35,7 @@ export interface Context {
 
 export function scanRepo(ctx: Context): Entry[] {
   assertGitVersion();
+  repoRoot(ctx.cwd);
   try {
     git(["rev-parse", "--verify", "--quiet", "HEAD"], ctx.cwd);
   } catch {
