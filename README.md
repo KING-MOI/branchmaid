@@ -38,6 +38,27 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 ```
 
+## Scripting
+
+`--names` prints one branch per line and `--json` prints everything branchmaid
+knows, so it composes with other tools:
+
+```sh
+branchmaid --gone --names | xargs -n1 git log -1 --oneline
+branchmaid --json | jq '.[] | select(.ahead > 0) | .branch.name'
+branchmaid sweep --yes --json > sweep-report.json
+```
+
+Without a terminal, `sweep` refuses to delete anything unless you pass `--yes`.
+
+## Shell completion
+
+```sh
+branchmaid completion bash >> ~/.bashrc
+branchmaid completion zsh > "${fpath[1]}/_branchmaid"
+branchmaid completion fish > ~/.config/fish/completions/branchmaid.fish
+```
+
 ## Troubleshooting
 
 Set `BRANCHMAID_DEBUG=1` to print every git command branchmaid runs:
