@@ -15,6 +15,16 @@ backup tag behind, so nothing is ever more than one command away from coming bac
 - Node.js 20.12 or newer
 - git 2.41 or newer
 
+## Contents
+
+- [Usage](#usage)
+- [Scripting](#scripting)
+- [Shell completion](#shell-completion)
+- [Troubleshooting](#troubleshooting)
+- [Backups](#backups)
+- [How branches are classified](#how-branches-are-classified)
+- [Configuration](#configuration)
+
 ## Install
 
 ```sh
