@@ -25,7 +25,12 @@ export function defaultBase(cwd?: string): string {
 }
 
 export function isSquashMerged(branch: string, base: string, cwd?: string): boolean {
-  const mergeBase = git(["merge-base", base, branch], cwd);
+  let mergeBase: string;
+  try {
+    mergeBase = git(["merge-base", base, branch], cwd);
+  } catch {
+    return false;
+  }
   const tree = git(["rev-parse", `${branch}^{tree}`], cwd);
   const probe = git(["commit-tree", tree, "-p", mergeBase, "-m", "branchmaid probe"], cwd);
   return git(["cherry", base, probe], cwd).startsWith("-");

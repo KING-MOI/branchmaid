@@ -81,3 +81,13 @@ describe("aheadBehind", () => {
     expect(map.get("main")).toEqual({ ahead: 0, behind: 0 });
   });
 });
+
+describe("isSquashMerged unrelated history", () => {
+  it("returns false for an orphan branch instead of throwing", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "--orphan", "gh-pages"]);
+    commit(repo, "pages");
+    sh(repo, ["checkout", "-q", "main"]);
+    expect(isSquashMerged("gh-pages", "main", repo)).toBe(false);
+  });
+});
