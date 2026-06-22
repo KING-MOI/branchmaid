@@ -53,3 +53,14 @@ describe("scan ahead/behind", () => {
     expect(ancient).toMatchObject({ ahead: 1, behind: 0 });
   });
 });
+
+describe("scan orphan branches", () => {
+  it("survives --squash on unrelated history", () => {
+    const repo = makeRepo();
+    sh(repo, ["checkout", "-q", "--orphan", "gh-pages"]);
+    commit(repo, "pages");
+    sh(repo, ["checkout", "-q", "main"]);
+    const entries = scan({ base: "main", staleAfter: DAY, protected: ["main"], squash: true }, repo);
+    expect(entries.find((e) => e.branch.name === "gh-pages")?.reasons).toEqual([]);
+  });
+});
