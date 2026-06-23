@@ -91,3 +91,17 @@ describe("isSquashMerged unrelated history", () => {
     expect(isSquashMerged("gh-pages", "main", repo)).toBe(false);
   });
 });
+
+describe("isSquashMerged ambiguous names", () => {
+  it("checks the branch even when a tag has the same name", () => {
+    const repo = makeRepo();
+    sh(repo, ["tag", "release"]);
+    sh(repo, ["checkout", "-q", "-b", "release"]);
+    writeFileSync(join(repo, "r.txt"), "r\n");
+    sh(repo, ["add", "r.txt"]);
+    commit(repo, "unmerged release work");
+    sh(repo, ["checkout", "-q", "main"]);
+    commit(repo, "main moves on");
+    expect(isSquashMerged("release", "main", repo)).toBe(false);
+  });
+});
