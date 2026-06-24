@@ -50,8 +50,9 @@ export async function sweep(ctx: Context): Promise<number> {
       return 0;
     }
   }
+  const at = new Date();
   const results = targets.map((e) =>
-    deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup, remote: ctx.flags.remote }),
+    deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup, remote: ctx.flags.remote, at }),
   );
   const failed = results.filter((r) => !r.deleted).length;
   if (json) {

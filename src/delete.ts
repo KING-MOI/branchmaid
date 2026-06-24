@@ -7,6 +7,7 @@ export interface DeleteOptions {
   backup?: boolean;
   remote?: boolean;
   cwd?: string;
+  at?: Date;
 }
 
 export interface DeleteResult {
@@ -24,7 +25,7 @@ export function deleteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteRe
     const tip = git(["rev-parse", `refs/heads/${branch.name}`], opts.cwd);
     if (tip !== branch.sha)
       throw new Error(`tip moved since scan (${branch.sha.slice(0, 7)} -> ${tip.slice(0, 7)})`);
-    if (opts.backup !== false) tag = createBackup(branch.name, branch.sha, opts.cwd);
+    if (opts.backup !== false) tag = createBackup(branch.name, branch.sha, opts.cwd, opts.at);
     git(["branch", "-D", branch.name], opts.cwd);
   } catch (err) {
     if (tag) git(["tag", "-d", tag], opts.cwd);
