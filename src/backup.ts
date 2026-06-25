@@ -74,3 +74,9 @@ export function dropBackup(backup: Backup, cwd?: string): void {
 export function backupsOlderThan(all: Backup[], ms: number, now = Date.now()): Backup[] {
   return all.filter((b) => now - b.date.getTime() >= ms);
 }
+
+export function lastBatch(all: Backup[]): Backup[] {
+  if (all.length === 0) return [];
+  const newest = Math.max(...all.map((b) => b.date.getTime()));
+  return all.filter((b) => b.date.getTime() === newest);
+}
