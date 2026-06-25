@@ -4,6 +4,7 @@ import {
   backupTagName,
   createBackup,
   dropBackup,
+  lastBatch,
   listBackups,
   parseBackupTag,
   restoreBackup,
@@ -97,5 +98,18 @@ describe("createBackup collisions", () => {
     const second = createBackup("x", sha, repo, at);
     expect(second).not.toBe(first);
     expect(listBackups(repo).map((b) => b.branch)).toEqual(["x", "x"]);
+  });
+});
+
+describe("lastBatch", () => {
+  it("returns every backup sharing the newest timestamp", () => {
+    const mk = (branch: string, iso: string) => ({ tag: branch, branch, sha: "x", date: new Date(iso) });
+    const all = [
+      mk("a", "2026-02-01T00:00:00Z"),
+      mk("b", "2026-02-01T00:00:00Z"),
+      mk("old", "2026-01-01T00:00:00Z"),
+    ];
+    expect(lastBatch(all).map((b) => b.branch)).toEqual(["a", "b"]);
+    expect(lastBatch([])).toEqual([]);
   });
 });
