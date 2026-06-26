@@ -8,6 +8,7 @@ Commands
   sweep                 delete merged and gone branches, keeping backup tags
   backups               list backup tags left by sweep
   restore <branch|tag>  recreate a deleted branch from its latest backup or a given tag
+  undo                  restore every branch deleted by the last sweep
   init                  write a .branchmaidrc with the defaults
   config                print the effective config and where it came from
   completion <shell>    print a completion script for bash, zsh or fish
@@ -59,6 +60,10 @@ given age.`,
 
 Recreate a deleted branch from its newest backup, or from the exact tag given.
 Without an argument, pick a backup from a list.`,
+  undo: `Usage: branchmaid undo [-n]
+
+Restore every branch from the most recent sweep. Branches that already exist
+again are reported and left alone.`,
   init: `Usage: branchmaid init
 
 Write a .branchmaidrc with the default settings at the repository root.`,

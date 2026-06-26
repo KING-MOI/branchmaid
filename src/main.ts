@@ -7,6 +7,7 @@ import { init } from "./commands/init.js";
 import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
 import { sweep } from "./commands/sweep.js";
+import { undo } from "./commands/undo.js";
 import { type Config, loadConfig } from "./config.js";
 import { COMMAND_HELP, HELP } from "./help.js";
 import type { Context } from "./context.js";
@@ -18,6 +19,7 @@ export const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>
   sweep,
   backups,
   restore,
+  undo,
   init,
   config,
   completion: makeCompletion(
