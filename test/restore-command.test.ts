@@ -110,3 +110,37 @@ describe("restore by tag", () => {
     expect(sh(r, ["rev-parse", "thing"])).toBe(sh(r, ["rev-parse", "HEAD"]));
   });
 });
+
+describe("undo", () => {
+  it("brings back every branch from the last sweep", async () => {
+    const r = makeRepo();
+    sh(r, ["branch", "one"]);
+    sh(r, ["branch", "two"]);
+    sh(r, ["commit", "-q", "--allow-empty", "-m", "main moves on"]);
+    await run(["sweep", "-y"], r);
+    expect(listBranches(r).map((b) => b.name)).toEqual(["main"]);
+    const { code } = await run(["undo"], r);
+    expect(code).toBe(0);
+    expect(
+      listBranches(r)
+        .map((b) => b.name)
+        .sort(),
+    ).toEqual(["main", "one", "two"]);
+  });
+
+  it("leaves older sweeps alone", async () => {
+    const r = makeRepo();
+    sh(r, ["tag", "branchmaid/backup/20200101T000000Z/older"]);
+    sh(r, ["tag", "branchmaid/backup/20210101T000000Z/newer"]);
+    await run(["undo"], r);
+    expect(
+      listBranches(r)
+        .map((b) => b.name)
+        .sort(),
+    ).toEqual(["main", "newer"]);
+  });
+
+  it("reports when there is nothing to undo", async () => {
+    expect((await run(["undo"], makeRepo())).out).toBe("nothing to undo");
+  });
+});
