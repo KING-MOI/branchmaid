@@ -46,6 +46,7 @@ branchmaid sweep -n        # preview what sweep would delete
 branchmaid sweep           # delete merged and gone branches (asks first)
 branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
+branchmaid undo            # bring back everything the last sweep deleted
 ```
 
 ## Scripting
@@ -87,6 +88,7 @@ alive, so a deleted branch can always be brought back:
 branchmaid backups                    # list backups, newest first
 branchmaid restore feat/x             # recreate feat/x from its newest backup
 branchmaid restore feat/x --as feat/y # under a different name
+branchmaid undo                       # restore the whole last sweep
 branchmaid backups --prune 90d        # drop backups older than 90 days
 ```
 
