@@ -10,16 +10,25 @@ export function mergedInto(base: string, cwd?: string): Set<string> {
   return new Set(out ? out.split("\n") : []);
 }
 
-export function defaultBase(cwd?: string): string {
+function tryGit(args: string[], cwd?: string): string | undefined {
   try {
-    return git(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], cwd).replace(/^origin\//, "");
+    return git(args, cwd) || undefined;
   } catch {
-    for (const name of ["main", "master"]) {
-      try {
-        git(["rev-parse", "--verify", "--quiet", `refs/heads/${name}`], cwd);
-        return name;
-      } catch {}
-    }
+    return undefined;
+  }
+}
+
+export function defaultBase(cwd?: string): string {
+  const remoteHead = tryGit(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], cwd)?.replace(
+    /^origin\//,
+    "",
+  );
+  const configured = tryGit(["config", "init.defaultBranch"], cwd);
+  for (const name of [remoteHead, configured, "main", "master"]) {
+    if (name && tryGit(["rev-parse", "--verify", "--quiet", `refs/heads/${name}`], cwd)) return name;
+  }
+  if (remoteHead && tryGit(["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${remoteHead}`], cwd)) {
+    return `origin/${remoteHead}`;
   }
   throw new Error("could not detect base branch, pass --base");
 }

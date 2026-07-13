@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { aheadBehind, defaultBase, isSquashMerged, mergedInto } from "../src/merged.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 describe("mergedInto", () => {
   it("includes merged branches and excludes unmerged ones", () => {
@@ -103,5 +103,32 @@ describe("isSquashMerged ambiguous names", () => {
     sh(repo, ["checkout", "-q", "main"]);
     commit(repo, "main moves on");
     expect(isSquashMerged("release", "main", repo)).toBe(false);
+  });
+});
+
+describe("defaultBase fallbacks", () => {
+  it("uses origin HEAD when set", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["branch", "-m", "main", "trunk"]);
+    sh(repo, ["push", "-q", "origin", "trunk"]);
+    sh(repo, ["remote", "set-head", "origin", "trunk"]);
+    expect(defaultBase(repo)).toBe("trunk");
+  });
+
+  it("falls back to the remote branch when the local one was deleted", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["remote", "set-head", "origin", "main"]);
+    sh(repo, ["checkout", "-q", "-b", "work"]);
+    sh(repo, ["branch", "-D", "main"]);
+    expect(defaultBase(repo)).toBe("origin/main");
+  });
+
+  it("honours init.defaultBranch", () => {
+    const repo = makeRepo();
+    sh(repo, ["branch", "-m", "main", "trunk"]);
+    sh(repo, ["config", "init.defaultBranch", "trunk"]);
+    expect(defaultBase(repo)).toBe("trunk");
   });
 });
