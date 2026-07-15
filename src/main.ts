@@ -3,6 +3,7 @@ import pc from "picocolors";
 import { backups } from "./commands/backups.js";
 import { makeCompletion } from "./commands/completion.js";
 import { config } from "./commands/config.js";
+import { doctor } from "./commands/doctor.js";
 import { init } from "./commands/init.js";
 import { list } from "./commands/list.js";
 import { restore } from "./commands/restore.js";
@@ -22,6 +23,7 @@ export const COMMANDS: Record<string, (ctx: Context) => number | Promise<number>
   undo,
   init,
   config,
+  doctor,
   completion: makeCompletion(
     () => Object.keys(COMMANDS),
     () => Object.keys(OPTIONS),

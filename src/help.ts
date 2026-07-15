@@ -11,6 +11,7 @@ Commands
   undo                  restore every branch deleted by the last sweep
   init                  write a .branchmaidrc with the defaults
   config                print the effective config and where it came from
+  doctor                check git, config and remote setup
   completion <shell>    print a completion script for bash, zsh or fish
 
 Options
@@ -72,6 +73,11 @@ Write a .branchmaidrc with the default settings at the repository root.`,
 Print a shell completion script. For example:
   branchmaid completion bash >> ~/.bashrc
   branchmaid completion fish > ~/.config/fish/completions/branchmaid.fish`,
+  doctor: `Usage: branchmaid doctor
+
+Check the git version, repository, config, base branch, origin HEAD and
+fetch.prune, and suggest fixes for anything that will make results less
+accurate.`,
   config: `Usage: branchmaid config
 
 Print the configuration in effect and the file it was read from.`,
