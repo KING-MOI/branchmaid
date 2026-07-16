@@ -6,6 +6,28 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-17
+
+### Added
+
+- `undo` restores every branch deleted by the last sweep.
+- `doctor` checks git, config and remote setup.
+- `completion` prints bash, zsh and fish completion scripts.
+- Per-command help via `branchmaid <command> --help`.
+- `restore` accepts a tag, `--as <name>`, and offers a picker with no argument.
+- `--protect`, `--author`, `--no-color` and `--json` for sweep.
+- `--older-than` and `--prune` accept an ISO date.
+- `BRANCHMAID_DEBUG=1` traces git commands.
+- `schema.json` for editor completion; unknown config keys are rejected.
+
+### Fixed
+
+- Squash detection no longer crashes on branches with unrelated history.
+- Branches are resolved by full ref, so a tag with the same name cannot shadow them.
+- Base detection falls back to `origin/<branch>` when the local base is gone.
+- Backups taken in the same second no longer collide.
+- Empty repositories and missing repositories get clear errors.
+
 ## [0.1.0] - 2026-11-17
 
 ### Added
