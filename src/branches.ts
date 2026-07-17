@@ -30,8 +30,8 @@ const FIELDS = [
   "%(upstream:remoteref)",
 ];
 
-export function listBranches(cwd?: string): Branch[] {
-  const out = git(["for-each-ref", `--format=${FIELDS.join("%00")}`, "refs/heads"], cwd);
+function readRefs(pattern: string, cwd?: string): Branch[] {
+  const out = git(["for-each-ref", `--format=${FIELDS.join("%00")}`, pattern], cwd);
   if (!out) return [];
   return out.split("\n").map((line) => {
     const [name, sha, ts, author, email, subject, head, upstream, track, worktree, remote, remoteRef] =
@@ -51,4 +51,8 @@ export function listBranches(cwd?: string): Branch[] {
       remoteRef,
     };
   });
+}
+
+export function listBranches(cwd?: string): Branch[] {
+  return readRefs("refs/heads", cwd);
 }
