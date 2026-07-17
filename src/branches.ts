@@ -56,3 +56,10 @@ function readRefs(pattern: string, cwd?: string): Branch[] {
 export function listBranches(cwd?: string): Branch[] {
   return readRefs("refs/heads", cwd);
 }
+
+export function listRemoteBranches(remote: string, cwd?: string): Branch[] {
+  const prefix = `${remote}/`;
+  return readRefs(`refs/remotes/${remote}`, cwd)
+    .filter((b) => b.name.startsWith(prefix) && b.name !== `${prefix}HEAD`)
+    .map((b) => ({ ...b, remote, remoteRef: `refs/heads/${b.name.slice(prefix.length)}` }));
+}
