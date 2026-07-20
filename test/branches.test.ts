@@ -1,6 +1,6 @@
 import { realpathSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { listBranches } from "../src/branches.js";
+import { listBranches, listRemoteBranches } from "../src/branches.js";
 import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 describe("listBranches", () => {
@@ -76,5 +76,21 @@ describe("listBranches remote refs", () => {
     const b = listBranches(repo).find((x) => x.name === "feat/x")!;
     expect(b.remote).toBe("origin");
     expect(b.remoteRef).toBe("refs/heads/feat/x");
+  });
+});
+
+describe("listRemoteBranches", () => {
+  it("lists branches on a remote without HEAD", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["remote", "set-head", "origin", "main"]);
+    sh(repo, ["push", "-q", "origin", "main:feat/a"]);
+    sh(repo, ["fetch", "-q"]);
+    const remote = listRemoteBranches("origin", repo);
+    expect(remote.map((b) => b.name).sort()).toEqual(["origin/feat/a", "origin/main"]);
+    expect(remote.find((b) => b.name === "origin/feat/a")).toMatchObject({
+      remote: "origin",
+      remoteRef: "refs/heads/feat/a",
+    });
   });
 });
