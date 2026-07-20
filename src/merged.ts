@@ -1,12 +1,12 @@
 import { git } from "./git.js";
 
-export function mergedInto(base: string, cwd?: string): Set<string> {
+export function mergedInto(base: string, cwd?: string, pattern = "refs/heads"): Set<string> {
   try {
     git(["rev-parse", "--verify", "--quiet", `${base}^{commit}`], cwd);
   } catch {
     throw new Error(`base branch not found: ${base}`);
   }
-  const out = git(["branch", "--merged", base, "--format=%(refname:short)"], cwd);
+  const out = git(["for-each-ref", `--merged=${base}`, "--format=%(refname:short)", pattern], cwd);
   return new Set(out ? out.split("\n") : []);
 }
 
@@ -46,8 +46,12 @@ export function isSquashMerged(branch: string, base: string, cwd?: string): bool
   return git(["cherry", base, probe], cwd).startsWith("-");
 }
 
-export function aheadBehind(base: string, cwd?: string): Map<string, { ahead: number; behind: number }> {
-  const out = git(["for-each-ref", `--format=%(refname:short) %(ahead-behind:${base})`, "refs/heads"], cwd);
+export function aheadBehind(
+  base: string,
+  cwd?: string,
+  pattern = "refs/heads",
+): Map<string, { ahead: number; behind: number }> {
+  const out = git(["for-each-ref", `--format=%(refname:short) %(ahead-behind:${base})`, pattern], cwd);
   const map = new Map<string, { ahead: number; behind: number }>();
   for (const line of out ? out.split("\n") : []) {
     const [name, ahead, behind] = line.split(" ");
