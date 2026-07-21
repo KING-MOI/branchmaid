@@ -132,3 +132,19 @@ describe("defaultBase fallbacks", () => {
     expect(defaultBase(repo)).toBe("trunk");
   });
 });
+
+describe("mergedInto remote refs", () => {
+  it("reports remote branches merged into base", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["push", "-q", "origin", "main:done"]);
+    sh(repo, ["checkout", "-q", "-b", "open"]);
+    commit(repo, "open work");
+    sh(repo, ["push", "-q", "origin", "open"]);
+    sh(repo, ["checkout", "-q", "main"]);
+    sh(repo, ["fetch", "-q"]);
+    const merged = mergedInto("main", repo, "refs/remotes/origin");
+    expect(merged.has("origin/done")).toBe(true);
+    expect(merged.has("origin/open")).toBe(false);
+  });
+});
