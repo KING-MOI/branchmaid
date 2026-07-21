@@ -34,7 +34,7 @@ export function defaultBase(cwd?: string): string {
 }
 
 export function isSquashMerged(branch: string, base: string, cwd?: string): boolean {
-  const ref = `refs/heads/${branch}`;
+  const ref = branch.startsWith("refs/") ? branch : `refs/heads/${branch}`;
   let mergeBase: string;
   try {
     mergeBase = git(["merge-base", base, ref], cwd);
