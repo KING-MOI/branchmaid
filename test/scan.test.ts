@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { scan } from "../src/scan.js";
-import { commit, makeRepo, sh } from "./helpers.js";
+import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 const DAY = 86_400_000;
 
@@ -62,5 +62,25 @@ describe("scan orphan branches", () => {
     sh(repo, ["checkout", "-q", "main"]);
     const entries = scan({ base: "main", staleAfter: DAY, protected: ["main"], squash: true }, repo);
     expect(entries.find((e) => e.branch.name === "gh-pages")?.reasons).toEqual([]);
+  });
+});
+
+describe("scan remote", () => {
+  it("classifies branches on a remote and protects base by short name", () => {
+    const repo = makeRepo();
+    addRemote(repo);
+    sh(repo, ["push", "-q", "origin", "main:done"]);
+    commit(repo, "main moves on");
+    sh(repo, ["push", "-q", "origin", "main", "main:release/1"]);
+    sh(repo, ["fetch", "-q"]);
+    const entries = scan(
+      { base: "main", staleAfter: DAY, protected: ["main", "release/*"], remote: "origin" },
+      repo,
+    );
+    const byName = Object.fromEntries(entries.map((e) => [e.branch.name, e]));
+    expect(byName["origin/done"].reasons).toEqual(["merged"]);
+    expect(byName["origin/done"].protected).toBe(false);
+    expect(byName["origin/main"].protected).toBe(true);
+    expect(byName["origin/release/1"].protected).toBe(true);
   });
 });
