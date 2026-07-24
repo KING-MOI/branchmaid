@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { listBackups } from "../src/backup.js";
-import { listBranches } from "../src/branches.js";
-import { deleteBranch } from "../src/delete.js";
+import { listBranches, listRemoteBranches } from "../src/branches.js";
+import { deleteBranch, deleteRemoteBranch } from "../src/delete.js";
 import { addRemote, commit, makeRepo, sh } from "./helpers.js";
 
 function repoWith(name: string): string {
@@ -89,5 +89,36 @@ describe("deleteBranch remote safety", () => {
     expect(res.deleted).toBe(true);
     expect(res.remoteDeleted).toBe(false);
     expect(sh(remote, ["branch", "--list", "shared"])).toContain("shared");
+  });
+});
+
+describe("deleteRemoteBranch", () => {
+  function withRemoteBranch() {
+    const repo = makeRepo();
+    const remote = addRemote(repo);
+    sh(repo, ["push", "-q", "origin", "main:feat/x"]);
+    sh(repo, ["fetch", "-q"]);
+    const b = listRemoteBranches("origin", repo).find((x) => x.name === "origin/feat/x")!;
+    return { repo, remote, b };
+  }
+
+  it("deletes on the remote and tags the tip locally", () => {
+    const { repo, remote, b } = withRemoteBranch();
+    const res = deleteRemoteBranch(b, { cwd: repo });
+    expect(res.deleted).toBe(true);
+    expect(sh(remote, ["branch", "--list", "feat/x"])).toBe("");
+    expect(listBackups(repo)[0]).toMatchObject({ branch: "feat/x", sha: b.sha });
+  });
+
+  it("refuses when the remote moved and drops the tag", () => {
+    const { repo, remote, b } = withRemoteBranch();
+    sh(remote, [
+      "update-ref",
+      "refs/heads/feat/x",
+      sh(remote, ["commit-tree", "-m", "x", "-p", b.sha, `${b.sha}^{tree}`]),
+    ]);
+    const res = deleteRemoteBranch(b, { cwd: repo });
+    expect(res.deleted).toBe(false);
+    expect(listBackups(repo)).toEqual([]);
   });
 });
