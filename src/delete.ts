@@ -48,3 +48,26 @@ export function deleteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteRe
     return { name: branch.name, tag, deleted: true, remoteDeleted: false, error: (err as Error).message };
   }
 }
+
+export function deleteRemoteBranch(branch: Branch, opts: DeleteOptions = {}): DeleteResult {
+  if (opts.dryRun) return { name: branch.name, deleted: false };
+  const short = branch.remoteRef.replace(/^refs\/heads\//, "");
+  let tag: string | undefined;
+  try {
+    if (opts.backup !== false) tag = createBackup(short, branch.sha, opts.cwd, opts.at);
+    git(
+      [
+        "push",
+        "--quiet",
+        `--force-with-lease=${branch.remoteRef}:${branch.sha}`,
+        branch.remote,
+        `:${branch.remoteRef}`,
+      ],
+      opts.cwd,
+    );
+    return { name: branch.name, tag, deleted: true };
+  } catch (err) {
+    if (tag) git(["tag", "-d", tag], opts.cwd);
+    return { name: branch.name, deleted: false, error: (err as Error).message };
+  }
+}
