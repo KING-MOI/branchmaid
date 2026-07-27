@@ -112,11 +112,14 @@ describe("deleteRemoteBranch", () => {
 
   it("refuses when the remote moved and drops the tag", () => {
     const { repo, remote, b } = withRemoteBranch();
-    sh(remote, [
-      "update-ref",
-      "refs/heads/feat/x",
-      sh(remote, ["commit-tree", "-m", "x", "-p", b.sha, `${b.sha}^{tree}`]),
-    ]);
+    const ident = {
+      GIT_AUTHOR_NAME: "O",
+      GIT_AUTHOR_EMAIL: "o@x",
+      GIT_COMMITTER_NAME: "O",
+      GIT_COMMITTER_EMAIL: "o@x",
+    };
+    const moved = sh(remote, ["commit-tree", "-m", "x", "-p", b.sha, `${b.sha}^{tree}`], ident);
+    sh(remote, ["update-ref", "refs/heads/feat/x", moved]);
     const res = deleteRemoteBranch(b, { cwd: repo });
     expect(res.deleted).toBe(false);
     expect(listBackups(repo)).toEqual([]);
