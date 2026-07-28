@@ -30,6 +30,7 @@ export interface Context {
     as?: string;
     protect?: string[];
     author?: string;
+    remotes?: boolean;
   };
 }
 
@@ -48,6 +49,7 @@ export function scanRepo(ctx: Context): Entry[] {
       staleAfter: parseCutoff(ctx.flags["older-than"] ?? ctx.config.sweep.olderThan),
       protected: [...ctx.config.protected, ...(ctx.flags.protect ?? [])],
       squash: ctx.flags.squash ?? ctx.config.squash,
+      remote: ctx.flags.remotes ? "origin" : undefined,
     },
     ctx.cwd,
   );
