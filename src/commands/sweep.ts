@@ -1,7 +1,7 @@
 import { confirm, isCancel } from "@clack/prompts";
 import pc from "picocolors";
 import { type Context, scanRepo } from "../context.js";
-import { deleteBranch } from "../delete.js";
+import { deleteBranch, deleteRemoteBranch } from "../delete.js";
 import { pick } from "../pick.js";
 import { renderEntries } from "../render.js";
 import { selectSweep } from "../sweep.js";
@@ -51,8 +51,9 @@ export async function sweep(ctx: Context): Promise<number> {
     }
   }
   const at = new Date();
+  const opts = { cwd: ctx.cwd, backup: !ctx.flags.noBackup, remote: ctx.flags.remote, at };
   const results = targets.map((e) =>
-    deleteBranch(e.branch, { cwd: ctx.cwd, backup: !ctx.flags.noBackup, remote: ctx.flags.remote, at }),
+    ctx.flags.remotes ? deleteRemoteBranch(e.branch, opts) : deleteBranch(e.branch, opts),
   );
   const failed = results.filter((r) => !r.deleted).length;
   if (json) {
