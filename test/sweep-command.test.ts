@@ -171,3 +171,33 @@ describe("sweep --json", () => {
     expect((await run(["sweep", "-y", "--json"], makeRepo())).out).toBe("[]");
   });
 });
+
+describe("--remotes", () => {
+  function remoteRepo() {
+    const r = makeRepo();
+    const remote = addRemote(r);
+    sh(r, ["push", "-q", "origin", "main:merged-remote"]);
+    sh(r, ["checkout", "-q", "-b", "open"]);
+    commit(r, "open");
+    sh(r, ["push", "-q", "origin", "open"]);
+    sh(r, ["checkout", "-q", "main"]);
+    commit(r, "main moves on");
+    sh(r, ["push", "-q", "origin", "main"]);
+    sh(r, ["fetch", "-q"]);
+    return { r, remote };
+  }
+
+  it("lists remote branches", async () => {
+    const { r } = remoteRepo();
+    const { out } = await run(["list", "--remotes", "--merged", "--names"], r);
+    expect(out).toBe("origin/merged-remote");
+  });
+
+  it("sweeps merged branches on origin", async () => {
+    const { r, remote } = remoteRepo();
+    await run(["sweep", "--remotes", "-y"], r);
+    const left = sh(remote, ["for-each-ref", "--format=%(refname:short)", "refs/heads"]).split("\n").sort();
+    expect(left).toEqual(["main", "open"]);
+    expect(listBackups(r)[0].branch).toBe("merged-remote");
+  });
+});
