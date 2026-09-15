@@ -18,6 +18,7 @@ backup tag behind, so nothing is ever more than one command away from coming bac
 ## Contents
 
 - [Usage](#usage)
+- [Branches on the remote](#branches-on-the-remote)
 - [Scripting](#scripting)
 - [Shell completion](#shell-completion)
 - [Troubleshooting](#troubleshooting)
@@ -48,6 +49,21 @@ branchmaid sweep -i        # pick branches by hand
 branchmaid restore feat/x  # bring a deleted branch back
 branchmaid undo            # bring back everything the last sweep deleted
 ```
+
+## Branches on the remote
+
+`--remotes` switches every command to the branches on `origin`, which is handy
+for cleaning up a fork:
+
+```sh
+branchmaid --remotes --merged       # merged branches still on origin
+branchmaid sweep --remotes -n       # preview
+branchmaid sweep --remotes          # delete them on origin
+```
+
+Each remote branch is tagged locally before it is deleted, and the push uses
+`--force-with-lease`, so a branch someone pushed to in the meantime is left
+alone.
 
 ## Scripting
 
